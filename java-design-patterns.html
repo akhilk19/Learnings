@@ -1,0 +1,2777 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Design Patterns & Coding Interview Practice Handbook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'Fira Code', monospace; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+        @media print {
+            body { background: white !important; color: black !important; }
+            no-print, sidebar, header { display: none !important; }
+            main { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+            .print-break { page-break-before: always; }
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
+    <div id="shared-header"></div>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-80 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 z-30">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+                        <i class="fa-solid fa-mug-hot"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base leading-tight">Java Design Patterns</h1>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Complete Interview Handbook</p>
+                    </div>
+                </div>
+                <button id="themeToggle" class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Theme">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                </button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="p-3 border-b border-slate-200 dark:border-slate-800">
+                <div class="relative">
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Search patterns, topics, LLD..." class="w-full pl-9 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-800 rounded-lg border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none transition">
+                </div>
+            </div>
+
+            <!-- Progress Bar & Stats -->
+            <div class="px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex justify-between items-center text-xs mb-1.5 font-medium">
+                    <span class="text-slate-600 dark:text-slate-400">Mastery Progress</span>
+                    <span id="progressText" class="text-indigo-600 dark:text-indigo-400">0 / 45 completed</span>
+                </div>
+                <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2">
+                    <div id="progressBar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <div id="navLinks" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1 text-sm font-medium">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Footer Action -->
+            <div class="p-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500">
+                <span>Java 17+ Ready</span>
+                <button onclick="window.print()" class="hover:text-indigo-600 transition flex items-center gap-1">
+                    <i class="fa-solid fa-print"></i> Print / PDF
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+            <!-- Top Mobile Header -->
+            <header class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur flex items-center justify-between px-6 lg:hidden z-20">
+                <button id="sidebarToggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <span class="font-bold text-sm truncate" id="mobileTitle">Java Design Patterns</span>
+                <div class="w-8"></div>
+            </header>
+
+            <!-- Scrollable Content View -->
+            <div id="contentArea" class="flex-1 overflow-y-auto custom-scrollbar p-6 lg:p-12 focus:outline-none">
+                <!-- Dynamic Content injected here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 px-4 py-3 rounded-xl shadow-2xl text-sm font-medium transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMessage">Action completed successfully</span>
+    </div>
+
+    <script>
+        // Data Structure for Handbook Sections and Lessons
+        const handbookData = [
+            {
+                category: "Getting Started",
+                icon: "fa-book-open",
+                items: [
+                    {
+                        id: "setup",
+                        title: "1. Initial Project Setup & Environment",
+                        type: "guide",
+                        badge: "Foundation",
+                        content: `
+                            <h2 class="text-3xl font-extrabold tracking-tight mb-4">Initial Project Setup & Execution Guide</h2>
+                            <p class="text-slate-600 dark:text-slate-300 text-lg mb-6">Welcome to your hands-on Java Design Patterns Handbook. Before diving into architectural patterns, let's establish a clean, standard, dependency-free project structure that works seamlessly on macOS using your existing terminal and JDK.</p>
+                            
+                            <div class="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-500 p-4 rounded-r-xl mb-8">
+                                <h3 class="font-bold text-amber-800 dark:text-amber-400 mb-1 flex items-center gap-2"><i class="fa-solid fa-circle-info"></i> Environment Verification</h3>
+                                <p class="text-sm text-amber-700 dark:text-amber-300 mb-2">Verify your local Java runtime and compiler by running these terminal commands:</p>
+                                <pre class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono mb-2">java -version\njavac -version</pre>
+                                <p class="text-xs text-amber-700 dark:text-amber-300">Ensure you have <strong>Java 17 or higher</strong> installed to utilize modern features like records, sealed classes, pattern matching, and enhanced switch expressions.</p>
+                            </div>
+
+                            <h3 class="text-xl font-bold mb-3">Recommended Directory Structure</h3>
+                            <p class="text-slate-600 dark:text-slate-300 mb-4">Organize your workspace cleanly without heavy build tools (Maven/Gradle) for simple code isolation:</p>
+                            
+                            <pre class="bg-slate-900 text-slate-100 p-4 rounded-xl text-sm font-mono mb-6 overflow-x-auto">java-design-patterns/
+├── src/
+│   ├── creational/
+│   │   ├── singleton/
+│   │   │   ├── SingletonDemo.java
+│   │   │   └── ThreadSafeSingleton.java
+│   │   ├── factory/
+│   │   └── ...
+│   ├── structural/
+│   ├── behavioral/
+│   └── enterprise/
+└── README.md</pre>
+
+                            <h3 class="text-xl font-bold mb-3">How to Compile and Run from Terminal</h3>
+                            <ol class="list-decimal pl-5 space-y-3 text-slate-600 dark:text-slate-300 mb-8">
+                                <li>Navigate to your project root directory in your terminal.</li>
+                                <li>Compile a specific Java file including package declarations using the source path flag:
+                                    <pre class="bg-slate-900 text-slate-200 p-2.5 rounded-lg text-xs font-mono mt-1">javac -d out src/creational/singleton/DatabaseConnectionPool.java</pre>
+                                </li>
+                                <li>Execute the compiled bytecode specifying the fully qualified class name:
+                                    <pre class="bg-slate-900 text-slate-200 p-2.5 rounded-lg text-xs font-mono mt-1">java -cp out creational.singleton.DatabaseConnectionPool</pre>
+                                </li>
+                            </ol>
+                        `
+                    },
+                    {
+                        id: "oop-fundamentals",
+                        title: "2. OOP & Java Design Fundamentals",
+                        type: "guide",
+                        badge: "Fundamentals",
+                        content: `
+                            <h2 class="text-3xl font-extrabold tracking-tight mb-4">OOP & Java Fundamentals for Patterns</h2>
+                            <p class="text-slate-600 dark:text-slate-300 text-lg mb-6">Design patterns are built upon rigorous Object-Oriented Programming (OOP) principles and SOLID axioms. Let's quickly review the core concepts underpinning robust architecture.</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <h3 class="font-bold text-lg text-indigo-600 dark:text-indigo-400 mb-2">SOLID Principles</h3>
+                                    <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                                        <li><strong>S - Single Responsibility:</strong> A class should have only one reason to change.</li>
+                                        <li><strong>O - Open/Closed:</strong> Open for extension, closed for modification.</li>
+                                        <li><strong>L - Liskov Substitution:</strong> Subtypes must be substitutable for their base types.</li>
+                                        <li><strong>I - Interface Segregation:</strong> Clients shouldn't depend on methods they don't use.</li>
+                                        <li><strong>D - Dependency Inversion:</strong> Depend upon abstractions, not concretions.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <h3 class="font-bold text-lg text-indigo-600 dark:text-indigo-400 mb-2">Composition over Inheritance</h3>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300">Inheritance introduces tight coupling and rigid class hierarchies (the fragile base class problem). Delegation and composition allow dynamic behavior modification at runtime, heavily utilized in Decorator, Strategy, and State patterns.</p>
+                                </div>
+                            </div>
+                        `
+                    }
+                ]
+            },
+            {
+                category: "Part 1 — Creational Patterns",
+                icon: "fa-cube",
+                items: [
+                    {
+                        id: "singleton",
+                        title: "1. Singleton Pattern",
+                        type: "pattern",
+                        badge: "Creational",
+                        difficulty: "Easy",
+                        problem: "You are building a high-throughput enterprise application with a centralized Configuration Manager and a Database Connection Pool. If multiple threads instantiate multiple instances of these classes, you face severe memory waste, configuration drift, and database connection leaks.",
+                        understand: "A straightforward implementation (new ConfigurationManager()) allows unlimited instantiation. We must guarantee that a class has <strong>exactly one instance</strong> while providing a global access point to that instance without resorting to global variables.",
+                        introduce: {
+                            name: "Singleton Pattern",
+                            category: "Creational",
+                            intent: "Ensure a class has only one instance and provide a global point of access to it.",
+                            whenToUse: "When exactly one instance of a class must coordinate actions across the system (e.g., Loggers, Caches, Thread Pools, Registry settings).",
+                            whenNotToUse: "When you need multiple instances, or when tight coupling to a global state hampers unit testing and concurrency scaling.",
+                            realWorld: "Spring IoC Bean default scope (singleton), Runtime.getRuntime(), Logger instances."
+                        },
+                        uml: "The Singleton class maintains a private static instance variable, a private constructor to prevent external 'new' calls, and a public static getInstance() method.",
+                        code: `package creational.singleton;
+
+// Thread-Safe Double-Checked Locking Singleton implementation in Java 17
+public class DatabaseConnectionPool {
+    
+    // Volatile ensures visibility across threads during lazy initialization
+    private static volatile DatabaseConnectionPool instance;
+    private int activeConnections;
+
+    // Private constructor prevents direct instantiation
+    private DatabaseConnectionPool() {
+        this.activeConnections = 10;
+        System.out.println("-> [INIT] DatabaseConnectionPool initialized with 10 connections.");
+    }
+
+    // Public global access point with Double-Checked Locking
+    public static DatabaseConnectionPool getInstance() {
+        if (instance == null) {
+            synchronized (DatabaseConnectionPool.class) {
+                if (instance == null) {
+                    instance = new DatabaseConnectionPool();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public void executeQuery(String query) {
+        System.out.println("Executing query via Singleton instance: " + query);
+    }
+
+    public static void main(String[] args) {
+        // Test thread-safe singleton
+        Runnable task = () -> {
+            DatabaseConnectionPool pool = DatabaseConnectionPool.getInstance();
+            System.out.println(Thread.currentThread().getName() + " -> Instance Hash: " + pool.hashCode());
+        };
+
+        Thread t1 = new Thread(task, "Worker-1");
+        Thread t2 = new Thread(task, "Worker-2");
+        t1.start();
+        t2.start();
+    }
+}`,
+                        compileInstructions: "javac -d out src/creational/singleton/DatabaseConnectionPool.java\njava -cp out creational.singleton.DatabaseConnectionPool",
+                        codeFlow: "1. Multiple threads call DatabaseConnectionPool.getInstance().\n2. First check avoids synchronization overhead once initialized.\n3. Synchronized block ensures only one thread creates the instance.\n4. Both threads return the exact same object reference hash.",
+                        comparison: "Without Singleton, every service layer creates its own connection pool, exhausting DB limits. With Singleton, a single shared resource manages connections efficiently, though unit testing requires careful mock reset handling.",
+                        questions: [
+                            {
+                                id: "sing-q1",
+                                level: "Easy",
+                                question: "How does Enum Singleton protect against Reflection and Serialization attacks?",
+                                answer: {
+                                    code: `public enum EnumDatabaseConfig {
+    INSTANCE;
+    private String connectionString = "jdbc:postgresql://localhost:5432/mydb";
+    
+    public void connect() {
+        System.out.println("Connecting to: " + connectionString);
+    }
+}`,
+                                    explanation: "Java guarantees by language specification that enums are instantiated only once, even under aggressive reflection (Constructor.newInstance() throws IllegalAccessException for enums) and standard Java serialization/deserialization.",
+                                    relationships: "Direct enum structure with built-in JVM-level thread and reflection safety.",
+                                    flow: "Enum constants are initialized when the enum class is first loaded by the ClassLoader in a thread-safe manner.",
+                                    output: "Connecting to: jdbc:postgresql://localhost:5432/mydb",
+                                    why: "Simplest, safest, and most robust Singleton implementation in modern Java.",
+                                    alternatives: "Holder idiom (Initialization-on-demand holder idiom) is also highly efficient without enum syntax."
+                                }
+                            },
+                            {
+                                id: "sing-q2",
+                                level: "Medium",
+                                question: "Write a thread-safe Bill Pugh Singleton (Initialization-on-demand holder idiom) and explain why it doesn't require explicit synchronization.",
+                                answer: {
+                                    code: `public class BillPughSingleton {
+    private BillPughSingleton() {
+        System.out.println("Bill Pugh Singleton Initialized");
+    }
+
+    private static class Holder {
+        private static final BillPughSingleton INSTANCE = new BillPughSingleton();
+    }
+
+    public static BillPughSingleton getInstance() {
+        return Holder.INSTANCE;
+    }
+}`,
+                                    explanation: "The outer class does not reference the inner static class Holder during initialization. The Holder class is loaded only when getInstance() is called for the first time. JVM guarantees class loading is thread-safe.",
+                                    relationships: "Outer class delegates instance holding to a static inner helper class.",
+                                    flow: "Caller invokes getInstance() -> JVM loads Holder class -> INSTANCE initialized thread-safely -> returned to caller.",
+                                    output: "Bill Pugh Singleton Initialized",
+                                    why: "Achieves lazy loading and thread safety without volatile overhead or synchronization bottlenecks.",
+                                    alternatives: "Double-checked locking or Enum."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["Why is Double-Checked Locking required to use the 'volatile' keyword?", "Can Singleton be broken by cloning or deserialization?"],
+                            scenarios: ["Your microservice runs in a Kubernetes cluster with 5 pods. Does the Singleton pattern ensure only one instance exists across the entire cluster?", "Answer: No! Singleton only guarantees one instance per JVM classloader. Across pods or distributed containers, you need distributed locks or Redis."],
+                            misconceptions: ["Thinking Singleton is a replacement for Dependency Injection."],
+                            pros: ["Controlled access to sole instance", "Reduced memory footprint"],
+                            cons: ["Global state makes unit testing difficult", "Violates Single Responsibility Principle if overused as a global dumping ground"],
+                            comparisons: ["Singleton vs Static Class: Singletons can implement interfaces, be passed as parameters, and undergo lazy initialization; static classes cannot."]
+                        },
+                        mistakes: ["Forgetting 'volatile' in double-checked locking allowing partial object publication race conditions.", "Not making the constructor private."]
+                    },
+                    {
+                        id: "factory-method",
+                        title: "2. Factory Method Pattern",
+                        type: "pattern",
+                        badge: "Creational",
+                        difficulty: "Medium",
+                        problem: "Your logistics application currently handles Road Transport (Trucks). Suddenly, management requires supporting Sea Transport (Ships) and Air Transport (Drones). Your existing code has hardcoded 'new Truck()' statements scattered across business logic, making extension painful.",
+                        understand: "When object creation logic is tightly coupled with client code, adding new types requires modifying existing code, violating the Open/Closed Principle. We need to delegate instantiation to subclasses.",
+                        introduce: {
+                            name: "Factory Method Pattern",
+                            category: "Creational",
+                            intent: "Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses.",
+                            whenToUse: "When a class cannot anticipate the class of objects it must create, or when subclasses should specify the objects created.",
+                            whenNotToUse: "When creation logic is extremely simple and never expected to change.",
+                            realWorld: "java.util.Calendar.getInstance(), LoggerFactory.getLogger()"
+                        },
+                        uml: "Creator abstract class declares the factoryMethod(). ConcreteCreator overrides factoryMethod() to return a ConcreteProduct.",
+                        code: `package creational.factorymethod;
+
+// Product Interface
+interface Transport {
+    void deliver();
+}
+
+class Truck implements Transport {
+    public void deliver() { System.out.println("Deliver by land in a box truck 🚚"); }
+}
+
+class Ship implements Transport {
+    public void deliver() { System.out.println("Deliver by sea in a container ship 🚢"); }
+}
+
+// Creator Abstract Class
+abstract class Logistics {
+    // The Factory Method
+    public abstract Transport createTransport();
+
+    public void planDelivery() {
+        Transport transport = createTransport();
+        System.out.println("Planning logistics route...");
+        transport.deliver();
+    }
+}
+
+class RoadLogistics extends Logistics {
+    @Override
+    public Transport createTransport() { return new Truck(); }
+}
+
+class SeaLogistics extends Logistics {
+    @Override
+    public Transport createTransport() { return new Ship(); }
+}
+
+public class FactoryMethodDemo {
+    public static void main(String[] args) {
+        Logistics roadLogistics = new RoadLogistics();
+        roadLogistics.planDelivery();
+
+        Logistics seaLogistics = new SeaLogistics();
+        seaLogistics.planDelivery();
+    }
+}`,
+                        compileInstructions: "javac -d out src/creational/factorymethod/FactoryMethodDemo.java\njava -cp out creational.factorymethod.FactoryMethodDemo",
+                        codeFlow: "1. Client invokes planDelivery() on Logistics creator.\n2. planDelivery calls abstract createTransport().\n3. Subclass (RoadLogistics) executes its implementation and returns Truck.\n4. planDelivery invokes deliver() on the returned product polymorphically.",
+                        comparison: "Without Factory Method, massive switch statements check types. With Factory Method, adding a 'DroneLogistics' requires zero modifications to existing creator core logic.",
+                        questions: [
+                            {
+                                id: "fm-q1",
+                                level: "Medium",
+                                question: "Distinguish between Simple Factory (an idiom) and the GoF Factory Method pattern.",
+                                answer: {
+                                    code: `// Simple Factory (Static Factory)
+class SimpleTransportFactory {
+    public static Transport create(String type) {
+        if (type.equals("truck")) return new Truck();
+        if (type.equals("ship")) return new Ship();
+        throw new IllegalArgumentException("Unknown type");
+    }
+}`,
+                                    explanation: "Simple Factory is a single class with a conditional statement creating various objects. Factory Method is an object-oriented design pattern utilizing inheritance where subclasses decide which class to instantiate.",
+                                    relationships: "Simple Factory centralizes creation; Factory Method decentralizes creation to subclasses.",
+                                    flow: "Client -> Simple Factory -> Concrete Object OR Client -> Subclass Creator -> Concrete Object.",
+                                    output: "Varies by type string passed.",
+                                    why: "Simple Factory violates OCP when new products are added because the factory method must be edited. Factory Method adheres to OCP.",
+                                    alternatives: "Abstract Factory or Dependency Injection containers."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["How does Factory Method support Open/Closed Principle?", "What is the difference between Abstract Factory and Factory Method?"],
+                            scenarios: ["You are building a notification service supporting Email, SMS, and Push. How would you design the instantiation layer?"],
+                            misconceptions: ["Confusing static factory methods in utility classes with the GoF Factory Method pattern."],
+                            pros: ["Eliminates tight coupling between creator and concrete products", "Single Responsibility Principle applied to object creation"],
+                            cons: ["Requires creating a parallel hierarchy of creator subclasses for every product type."]
+                        },
+                        mistakes: ["Overcomplicating simple applications where a simple constructor or builder suffices."]
+                    },
+                    {
+                        id: "abstract-factory",
+                        title: "3. Abstract Factory Pattern",
+                        type: "pattern",
+                        badge: "Creational",
+                        difficulty: "Hard",
+                        problem: "Your UI framework must support multiple operating system themes (Windows and MacOS). Each theme has buttons and checkboxes that must visually and behaviorally match. Mixing a Windows button with a MacOS checkbox results in a broken UI experience.",
+                        understand: "We need to create families of related or dependent objects without specifying their concrete classes. A single factory creates products that fit together.",
+                        introduce: {
+                            name: "Abstract Factory Pattern",
+                            category: "Creational",
+                            intent: "Provide an interface for creating families of related or dependent objects without specifying their concrete classes.",
+                            whenToUse: "When a system must be independent of how its products are created, composed, and represented, and when systems are configured with one of multiple families of products.",
+                            whenNotToUse: "When product families are rigid and rarely change, adding new product types requires updating the abstract factory interface and all subclasses.",
+                            realWorld: "Cross-platform UI toolkits, database driver factories (JDBC connection/statement factories)."
+                        },
+                        uml: "AbstractFactory declares creation methods for each product. ConcreteFactories implement these methods to return specific product families.",
+                        code: `package creational.abstractfactory;
+
+// Abstract Products
+interface Button { void paint(); }
+interface Checkbox { void check(); }
+
+// Windows Family
+class WinButton implements Button { public void paint() { System.out.println("Rendering a Windows style button 🪟"); } }
+class WinCheckbox implements Checkbox { public void check() { System.out.println("Checking Windows checkbox ☑️"); } }
+
+// MacOS Family
+class MacButton implements Button { public void paint() { System.out.println("Rendering a MacOS style button 🍏"); } }
+class MacCheckbox implements Checkbox { public void check() { System.out.println("Checking MacOS checkbox 🟩"); } }
+
+// Abstract Factory
+interface GUIFactory {
+    Button createButton();
+    Checkbox createCheckbox();
+}
+
+class WinFactory implements GUIFactory {
+    public Button createButton() { return new WinButton(); }
+    public Checkbox createCheckbox() { return new WinCheckbox(); }
+}
+
+class MacFactory implements GUIFactory {
+    public Button createButton() { return new MacButton(); }
+    public Checkbox createCheckbox() { return new MacCheckbox(); }
+}
+
+public class AbstractFactoryDemo {
+    public static void main(String[] args) {
+        String os = "Mac"; // or "Win"
+        GUIFactory factory = os.equals("Win") ? new WinFactory() : new MacFactory();
+        
+        Button btn = factory.createButton();
+        Checkbox cb = factory.createCheckbox();
+        
+        btn.paint();
+        cb.check();
+    }
+}`,
+                        compileInstructions: "javac -d out src/creational/abstractfactory/AbstractFactoryDemo.java\njava -cp out creational.abstractfactory.AbstractFactoryDemo",
+                        codeFlow: "1. Client selects factory based on environment (WinFactory or MacFactory).\n2. Client invokes factory.createButton() and factory.createCheckbox().\n3. Consistent family of GUI components is produced and rendered.",
+                        comparison: "Factory Method focuses on creating a single product via subclasses. Abstract Factory focuses on creating families of multiple related products.",
+                        questions: [
+                            {
+                                id: "af-q1",
+                                level: "Hard",
+                                question: "How do you add a new product (e.g., Scrollbar) to an existing Abstract Factory hierarchy without breaking existing factories?",
+                                answer: {
+                                    code: `// Adding a new product requires modifying the Abstract Factory interface:
+interface GUIFactory {
+    Button createButton();
+    Checkbox createCheckbox();
+    Scrollbar createScrollbar(); // New product added
+}`,
+                                    explanation: "Adding a new product type to Abstract Factory is notoriously difficult because all concrete factories must be modified to implement creation for the new product. This violates OCP for the factory hierarchy.",
+                                    relationships: "AbstractFactory interface expanded -> All concrete factories updated.",
+                                    flow: "Interface update -> Compile errors in concrete factories -> Implementation added in all factories.",
+                                    output: "Extends product family scope.",
+                                    why: "Demonstrates the key limitation and trade-off of the Abstract Factory pattern.",
+                                    alternatives: "Use Prototype or Registry-based factories if product families are highly volatile."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["When would you choose Abstract Factory over Factory Method?"],
+                            scenarios: ["Designing a multi-cloud deployment manager supporting AWS, Azure, and GCP resource factories."],
+                            misconceptions: ["Thinking Abstract Factory is just multiple Factory Methods grouped together."],
+                            pros: ["Ensures products from a family are used together", "Isolation of concrete classes"],
+                            cons: ["Difficult to support new kinds of products because the factory interface needs changing."]
+                        },
+                        mistakes: ["Using Abstract Factory when only a single product needs creation (overkill)."]
+                    },
+                    {
+                        id: "builder",
+                        title: "4. Builder Pattern",
+                        type: "pattern",
+                        badge: "Creational",
+                        difficulty: "Medium",
+                        problem: "You are constructing a complex HttpService configuration object with 15 optional parameters (timeouts, headers, proxies, ssl certs, retry counts). Using overloaded constructors leads to the 'Telescoping Constructor Anti-Pattern' with unreadable parameter lists.",
+                        understand: "When objects require complex construction steps with numerous optional parameters, constructors become bloated and error-prone. We need a step-by-step fluent API builder.",
+                        introduce: {
+                            name: "Builder Pattern",
+                            category: "Creational",
+                            intent: "Separate the construction of a complex object from its representation so that the same construction process can create different representations.",
+                            whenToUse: "When an object must be constructed with numerous configuration options, especially when many parameters are optional or immutable.",
+                            whenNotToUse: "When objects require 1-3 parameters maximum (simple constructors suffice).",
+                            realWorld: "StringBuilder, java.net.http.HttpRequest.Builder, Lombok @Builder."
+                        },
+                        uml: "Director orchestrates steps, Builder interface defines steps, ConcreteBuilder constructs the product, Product is the final immutable object.",
+                        code: `package creational.builder;
+
+// Immutable Product
+class Computer {
+    private final String cpu;
+    private final String ram;
+    private final boolean isGraphicsCardEnabled;
+    private final boolean isBluetoothEnabled;
+
+    private Computer(Builder builder) {
+        this.cpu = builder.cpu;
+        this.ram = builder.ram;
+        this.isGraphicsCardEnabled = builder.isGraphicsCardEnabled;
+        this.isBluetoothEnabled = builder.isBluetoothEnabled;
+    }
+
+    @Override
+    public String toString() {
+        return "Computer [CPU=" + cpu + ", RAM=" + ram + ", GPU=" + isGraphicsCardEnabled + ", BT=" + isBluetoothEnabled + "]";
+    }
+
+    // Static Nested Builder
+    public static class Builder {
+        private String cpu;
+        private String ram;
+        private boolean isGraphicsCardEnabled = false; // default
+        private boolean isBluetoothEnabled = false;   // default
+
+        public Builder(String cpu, String ram) {
+            this.cpu = cpu;
+            this.ram = ram;
+        }
+
+        public Builder setGraphicsCardEnabled(boolean status) {
+            this.isGraphicsCardEnabled = status;
+            return this;
+        }
+
+        public Builder setBluetoothEnabled(boolean status) {
+            this.isBluetoothEnabled = status;
+            return this;
+        }
+
+        public Computer build() {
+            return new Computer(this);
+        }
+    }
+}
+
+public class BuilderDemo {
+    public static void main(String[] args) {
+        Computer gamingPC = new Computer.Builder("Intel i9", "32GB")
+                .setGraphicsCardEnabled(true)
+                .setBluetoothEnabled(true)
+                .build();
+
+        System.out.println(gamingPC);
+    }
+}`,
+                        compileInstructions: "javac -d out src/creational/builder/BuilderDemo.java\njava -cp out creational.builder.BuilderDemo",
+                        codeFlow: "1. Client calls Computer.Builder with required fields (cpu, ram).\n2. Fluent setter methods return 'this' builder instance.\n3. build() method validates state and instantiates private Computer constructor.",
+                        comparison: "Telescoping constructors required 5+ messy constructors. Builder provides crystal clear fluent method chaining and guaranteed immutability.",
+                        questions: [
+                            {
+                                id: "bld-q1",
+                                level: "Easy",
+                                question: "How does Java 16+ 'record' compare to the traditional Builder pattern for immutable data carriers?",
+                                answer: {
+                                    code: `public record UserDto(String username, int age, String email) {}`,
+                                    explanation: "Records automatically generate constructor, getters, equals, hashCode, and toString. However, records lack fluent method chaining for optional parameters unless customized with compact constructors or static builders.",
+                                    relationships: "Records provide concise data carriers; Builder provides fluent step-by-step construction for complex objects.",
+                                    flow: "Record instantiation vs Builder chaining.",
+                                    output: "UserDto[username=alice, age=30, email=a@b.com]",
+                                    why: "Records replace simple DTO builders, but Builder remains superior for complex objects with 5+ optional fields.",
+                                    alternatives: "Lombok @Builder or standard manual builder."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["Why should the built product be immutable?", "What is the telescoping constructor anti-pattern?"],
+                            scenarios: ["Designing a SQL Query Builder supporting optional WHERE clauses, JOINs, and ORDER BY directives."],
+                            misconceptions: ["Thinking builder objects need to be thread-safe (builders are typically stateful temporary objects)."],
+                            pros: ["Readable fluent client code", "Constructs immutable objects safely", "Avoids telescopic constructors"],
+                            cons: ["Requires writing duplicate boilerplate code unless using Lombok"]
+                        },
+                        mistakes: ["Modifying the product state after build() has been invoked."]
+                    },
+                    {
+                        id: "prototype",
+                        title: "5. Prototype Pattern",
+                        type: "pattern",
+                        badge: "Creational",
+                        difficulty: "Medium",
+                        problem: "Your game engine creates complex enemy monster objects by loading 3D assets from disk and querying database stats—a process taking 3 seconds per monster. Spawning 100 enemies lags the game.",
+                        understand: "When object creation is expensive or complex, cloning an existing pre-configured instance ('prototype') is vastly faster than re-creating from scratch.",
+                        introduce: {
+                            name: "Prototype Pattern",
+                            category: "Creational",
+                            intent: "Specify the kinds of objects to create using a prototypical instance, and create new objects by copying this prototype.",
+                            whenToUse: "When object creation is costly in terms of time or resources, or when instances have similar states.",
+                            whenNotToUse: "When objects have complex circular references or deep mutable state hierarchies that make cloning extremely bug-prone.",
+                            realWorld: "Object cloning in Java via Cloneable, game entity spawning."
+                        },
+                        uml: "Prototype interface declares clone(), ConcretePrototypes implement clone() to return a copy of themselves.",
+                        code: `package creational.prototype;
+
+import java.util.List;
+import java.util.ArrayList;
+
+interface Prototype extends Cloneable {
+    Prototype cloneObject();
+}
+
+class GameCharacter implements Prototype {
+    private String name;
+    private int health;
+    private List<String> inventory;
+
+    public GameCharacter(String name, int health, List<String> inventory) {
+        this.name = name;
+        this.health = health;
+        this.inventory = inventory;
+    }
+
+    // Deep copy implementation
+    @Override
+    public Prototype cloneObject() {
+        List<String> clonedInventory = new ArrayList<>(this.inventory);
+        return new GameCharacter(this.name, this.health, clonedInventory);
+    }
+
+    @Override
+    public String toString() {
+        return "Character [Name=" + name + ", Health=" + health + ", Inventory=" + inventory + "]";
+    }
+}
+
+public class PrototypeDemo {
+    public static void main(String[] args) {
+        List<String> baseItems = new ArrayList<>(List.of("Sword", "Shield"));
+        GameCharacter baseWarrior = new GameCharacter("Orc Warrior", 100, baseItems);
+
+        // Clone prototype instantly
+        GameCharacter clonedWarrior = (GameCharacter) baseWarrior.cloneObject();
+        
+        System.out.println("Original: " + baseWarrior);
+        System.out.println("Cloned:   " + clonedWarrior);
+    }
+}`,
+                        compileInstructions: "javac -d out src/creational/prototype/PrototypeDemo.java\njava -cp out creational.prototype.PrototypeDemo",
+                        codeFlow: "1. Base prototype object initialized once.\n2. Client calls cloneObject() avoiding database/disk overhead.\n3. Deep copy ensures cloned object has independent collections.",
+                        comparison: "Without Prototype, every object creation hits heavy resource costs. With Prototype, object instantiation is reduced to memory copying.",
+                        questions: [
+                            {
+                                id: "proto-q1",
+                                level: "Medium",
+                                question: "What is the difference between a shallow copy and a deep copy in Java cloning?",
+                                answer: {
+                                    code: `// Shallow copy copies field values; references point to the same object.\n// Deep copy recursively duplicates all nested mutable reference objects.`,
+                                    explanation: "A shallow copy copies primitive fields and copies object reference addresses (shared state bug). A deep copy allocates new memory for all nested mutable objects.",
+                                    relationships: "Object graph -> Memory duplication depth.",
+                                    flow: "Super.clone() (shallow) vs manual instantiation of nested objects (deep).",
+                                    output: "Independent cloned state.",
+                                    why: "Crucial for preventing unintended mutation side-effects between prototype and clone.",
+                                    alternatives: "Serialization-based deep copying."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["Why is Java's built-in Object.clone() and Cloneable interface considered flawed by many architects?"],
+                            scenarios: ["Cloning complex AST (Abstract Syntax Tree) nodes in a compiler."],
+                            misconceptions: ["Assuming clone() automatically performs a deep copy."],
+                            pros: ["Avoids costly database or network calls during object creation", "Reduces subclassing complexity"],
+                            cons: ["Complex object graphs with circular references are very difficult to clone correctly."]
+                        },
+                        mistakes: ["Forgetting to deep-copy mutable collections, causing shared state mutation bugs."]
+                    }
+                ]
+            },
+            {
+                category: "Part 2 — Structural Patterns",
+                icon: "fa-project-diagram",
+                items: [
+                    {
+                        id: "adapter",
+                        title: "1. Adapter Pattern",
+                        type: "pattern",
+                        badge: "Structural",
+                        difficulty: "Easy",
+                        problem: "Your modern analytics application expects data in XML format, but a newly acquired legacy third-party payment gateway only outputs JSON. You cannot modify the legacy codebase.",
+                        understand: "When two incompatible interfaces need to work together, an adapter class wraps the legacy or incompatible object to translate calls into the expected format.",
+                        introduce: {
+                            name: "Adapter Pattern",
+                            category: "Structural",
+                            intent: "Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.",
+                            whenToUse: "When you want to use an existing class, and its interface does not match the one you need.",
+                            whenNotToUse: "When you can refactor the existing source code directly to match the desired interface.",
+                            realWorld: "InputStreamReader (adapts InputStream to Reader), Arrays.asList()"
+                        },
+                        uml: "Target interface expected by client, Adaptee incompatible existing class, Adapter implements Target and wraps Adaptee.",
+                        code: `package structural.adapter;
+
+// Target interface
+interface XmlAnalytics {
+    void analyzeXmlData(String xmlData);
+}
+
+// Incompatible Adaptee
+class JsonProvider {
+    public void getJsonData() {
+        System.out.println("Fetching raw JSON data from legacy service 📄");
+    }
+}
+
+// Adapter Class
+class JsonToXmlAdapter implements XmlAnalytics {
+    private final JsonProvider jsonProvider;
+
+    public JsonToXmlAdapter(JsonProvider jsonProvider) {
+        this.jsonProvider = jsonProvider;
+    }
+
+    @Override
+    public void analyzeXmlData(String xmlData) {
+        jsonProvider.getJsonData();
+        System.out.println("-> [Adapter] Converted JSON payload into XML: <analytics>Processed</analytics>");
+    }
+}
+
+public class AdapterDemo {
+    public static void main(String[] args) {
+        JsonProvider legacyService = new JsonProvider();
+        XmlAnalytics adapter = new JsonToXmlAdapter(legacyService);
+        
+        adapter.analyzeXmlData("<request>Test</request>");
+    }
+}`,
+                        compileInstructions: "javac -d out src/structural/adapter/AdapterDemo.java\njava -cp out structural.adapter.AdapterDemo",
+                        codeFlow: "1. Client invokes analyzeXmlData() on XmlAnalytics target interface.\n2. Adapter intercepts call, invokes getJsonData() on legacy JsonProvider.\n3. Adapter converts JSON result format into XML expected by client.",
+                        comparison: "Without Adapter, code breaks due to type mismatch. With Adapter, legacy systems integrate seamlessly without modifying source code.",
+                        questions: [
+                            {
+                                id: "adp-q1",
+                                level: "Easy",
+                                question: "What is the difference between Object Adapter and Class Adapter in Java?",
+                                answer: {
+                                    code: `// Object Adapter uses composition (holds reference to Adaptee).\n// Class Adapter uses multiple inheritance (extends Adaptee) - not possible directly in Java classes.`,
+                                    explanation: "Object Adapter delegates calls via composition (preferred in Java due to single class inheritance). Class Adapter uses subclassing, which requires multiple class inheritance not supported in Java.",
+                                    relationships: "Composition (has-a) vs Inheritance (is-a).",
+                                    flow: "Delegation to wrapped object instance.",
+                                    output: "Unified interface integration.",
+                                    why: "Java's single inheritance rule makes Object Adapter the standard implementation choice.",
+                                    alternatives: "Facade or Wrapper."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["When would you use an Adapter vs a Decorator?"],
+                            scenarios: ["Integrating a legacy logging library into a new Slf4j-based microservice architecture."],
+                            misconceptions: ["Confusing Adapter with Facade (Adapter changes interface; Facade simplifies interface)."],
+                            pros: ["Allows integration of legacy or third-party code without changes", "Single Responsibility Principle adhered to"],
+                            cons: ["Adds an extra layer of indirection and complexity."]
+                        },
+                        mistakes: ["Overcomplicating simple interface mappings with unnecessary deep wrapper hierarchies."]
+                    },
+                    {
+                        id: "decorator",
+                        title: "2. Decorator Pattern",
+                        type: "pattern",
+                        badge: "Structural",
+                        difficulty: "Medium",
+                        problem: "You are building a Notification service. Users can send basic email notifications. Soon, users want SMS notifications, Slack notifications, encryption, compression, and logging in any arbitrary combination. Creating subclasses for every combination leads to class explosion.",
+                        understand: "Subclassing creates rigid compile-time hierarchies. We need to attach additional responsibilities to an object dynamically at runtime by wrapping it inside decorator objects.",
+                        introduce: {
+                            name: "Decorator Pattern",
+                            category: "Structural",
+                            intent: "Attach additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality.",
+                            whenToUse: "When you want to add responsibilities to individual objects dynamically and transparently without affecting other objects.",
+                            whenNotToUse: "When object identity is critical (decorators wrap objects, changing their runtime reference type).",
+                            realWorld: "Java I/O streams (new BufferedReader(new FileReader(...))), Spring WebFlux decorators."
+                        },
+                        uml: "Component interface, ConcreteComponent base object, Decorator abstract class wrapping Component, ConcreteDecorators adding behavior.",
+                        code: `package structural.decorator;
+
+interface Notifier {
+    void send(String message);
+}
+
+class BasicNotifier implements Notifier {
+    @Override
+    public void send(String message) {
+        System.out.println("Sending Email: " + message);
+    }
+}
+
+abstract class NotifierDecorator implements Notifier {
+    protected final Notifier wrapped;
+
+    public NotifierDecorator(Notifier wrapped) {
+        this.wrapped = wrapped;
+    }
+
+    public void send(String message) {
+        wrapped.send(message);
+    }
+}
+
+class SlackDecorator extends NotifierDecorator {
+    public SlackDecorator(Notifier wrapped) { super(wrapped); }
+
+    @Override
+    public void send(String message) {
+        super.send(message);
+        sendSlack(message);
+    }
+
+    private void sendSlack(String message) {
+        System.out.println("Sending Slack alert: " + message);
+    }
+}
+
+class EncryptionDecorator extends NotifierDecorator {
+    public EncryptionDecorator(Notifier wrapped) { super(wrapped); }
+
+    @Override
+    public void send(String message) {
+        String encrypted = "[ENCRYPTED] " + message;
+        super.send(encrypted);
+    }
+}
+
+public class DecoratorDemo {
+    public static void main(String[] args) {
+        // Wrap basic notifier with Encryption and Slack decorators
+        Notifier notifier = new SlackDecorator(new EncryptionDecorator(new BasicNotifier()));
+        notifier.send("Server CPU usage at 95%!");
+    }
+}`,
+                        compileInstructions: "javac -d out src/structural/decorator/DecoratorDemo.java\njava -cp out structural.decorator.DecoratorDemo",
+                        codeFlow: "1. Client calls send() on outermost decorator (SlackDecorator).\n2. SlackDecorator calls wrapped decorator (EncryptionDecorator).\n3. EncryptionDecorator encrypts message and calls BasicNotifier.\n4. Behaviors execute sequentially like onion layers.",
+                        comparison: "Without Decorator, 2^N subclasses required for N features. With Decorator, arbitrary feature combinations are composed dynamically at runtime.",
+                        questions: [
+                            {
+                                id: "dec-q1",
+                                level: "Medium",
+                                question: "How does Java I/O architecture heavily leverage the Decorator pattern?",
+                                answer: {
+                                    code: `Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream("file.txt")));`,
+                                    explanation: "FileInputStream provides raw byte reading. InputStreamReader adapts bytes to characters. BufferedReader adds buffering. Each decorator wraps the previous stream to add functionality without modifying base classes.",
+                                    relationships: "Component -> Decorator -> Concrete Decorators wrapping streams.",
+                                    flow: "Stream -> Reader -> Buffer layered delegation.",
+                                    output: "Buffered character stream.",
+                                    why: "Demonstrates high extensibility and composition in standard JDK libraries.",
+                                    alternatives: "Inheritance (rejected due to class explosion)."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["What is the primary difference between Decorator and Proxy patterns?"],
+                            scenarios: ["Adding caching and authentication headers dynamically to HTTP REST client calls."],
+                            misconceptions: ["Confusing Decorator with Adapter (Decorator adds behavior; Adapter changes interface)."],
+                            pros: ["Dynamic runtime behavior extension", "Avoids class explosion"],
+                            cons: ["Debugging stacked decorators can be difficult (onion trace stacks)."]
+                        },
+                        mistakes: ["Depending on object identity (==) when decorators wrap instances."]
+                    },
+                    {
+                        id: "proxy",
+                        title: "3. Proxy Pattern",
+                        type: "pattern",
+                        badge: "Structural",
+                        difficulty: "Medium",
+                        problem: "Your application renders heavy 4K images from a remote database. Loading all images on startup crashes the app due to memory exhaustion, and unauthenticated users are accessing restricted images.",
+                        understand: "When you need to control access, lazy-load, cache, or secure an object without modifying its core implementation, introduce a proxy acting as a surrogate.",
+                        introduce: {
+                            name: "Proxy Pattern",
+                            category: "Structural",
+                            intent: "Provide a surrogate or placeholder for another object to control access to it.",
+                            whenToUse: "For Lazy Initialization (Virtual Proxy), Access Control (Protection Proxy), Caching (Caching Proxy), or Remote communication (Remote Proxy).",
+                            whenNotToUse: "When direct access is required with zero latency overhead.",
+                            realWorld: "Spring AOP (Transaction management, Security), Hibernate Lazy Loading proxies, java.lang.reflect.Proxy."
+                        },
+                        uml: "Subject interface, RealSubject heavy implementation, Proxy implementing Subject and controlling access to RealSubject.",
+                        code: `package structural.proxy;
+
+interface Image {
+    void display();
+}
+
+class RealImage implements Image {
+    private final String filename;
+
+    public RealImage(String filename) {
+        this.filename = filename;
+        loadFromDisk();
+    }
+
+    private void loadFromDisk() {
+        System.out.println("Loading heavy image from disk: " + filename + " 🖼️");
+    }
+
+    @Override
+    public void display() {
+        System.out.println("Displaying image: " + filename);
+    }
+}
+
+// Virtual Proxy
+class ProxyImage implements Image {
+    private final String filename;
+    private RealImage realImage;
+
+    public ProxyImage(String filename) {
+        this.filename = filename;
+    }
+
+    @Override
+    public void display() {
+        if (realImage == null) {
+            realImage = new RealImage(filename); // Lazy initialization
+        }
+        realImage.display();
+    }
+}
+
+public class ProxyDemo {
+    public static void main(String[] args) {
+        Image image = new ProxyImage("test_4k.png");
+        System.out.println("Proxy created. Image not loaded yet.");
+        
+        // Image loaded on demand
+        image.display();
+        // Subsequent calls bypass disk load
+        image.display();
+    }
+}`,
+                        compileInstructions: "javac -d out src/structural/proxy/ProxyDemo.java\njava -cp out structural.proxy.ProxyDemo",
+                        codeFlow: "1. ProxyImage created instantly with zero disk overhead.\n2. Client calls display() for the first time.\n3. Proxy instantiates RealImage (heavy load happens now).\n4. Subsequent calls delegate directly to cached RealImage.",
+                        comparison: "Without Proxy, heavy resources load prematurely. With Proxy, resource loading is deferred until strictly necessary.",
+                        questions: [
+                            {
+                                id: "prx-q1",
+                                level: "Hard",
+                                question: "Explain how Spring AOP uses dynamic proxies for @Transactional management.",
+                                answer: {
+                                    code: `@Transactional\npublic void transferMoney() { /* DB Ops */ }`,
+                                    explanation: "Spring wraps your service bean in a Dynamic Proxy (JDK Proxy or CGLIB). When transferMoney() is called, the proxy intercepts the call, opens a database transaction, invokes your actual bean method, and commits/rollbacks accordingly.",
+                                    relationships: "Client -> Spring AOP Proxy -> Target Service Bean.",
+                                    flow: "Method call intercepted -> Transaction opened -> Target executed -> Transaction committed.",
+                                    output: "Managed transactional boundary.",
+                                    why: "Enables cross-cutting concerns cleanly without polluting business logic.",
+                                    alternatives: "AspectJ bytecode weaving."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["What is the difference between JDK Dynamic Proxies and CGLIB proxies?"],
+                            scenarios: ["Implementing rate limiting and access control on microservice API endpoints."],
+                            misconceptions: ["Thinking proxies change the interface of the wrapped object."],
+                            pros: ["Controlled object access", "Lazy loading and caching optimization", "Security enforcement"],
+                            cons: ["Adds latency and architectural complexity."]
+                        },
+                        mistakes: ["Self-invocation within the same bean bypassing proxy interception."]
+                    },
+                    {
+                        id: "facade",
+                        title: "4. Facade Pattern",
+                        type: "pattern",
+                        badge: "Structural",
+                        difficulty: "Easy",
+                        problem: "Placing an e-commerce order requires interacting with inventory checks, payment processing gateways, shipping logistics, and notification engines. Client code gets cluttered managing 10 subsystem classes.",
+                        understand: "When client code becomes tightly coupled to a complex subsystem with numerous interdependent classes, provide a unified, simplified higher-level interface.",
+                        introduce: {
+                            name: "Facade Pattern",
+                            category: "Structural",
+                            intent: "Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use.",
+                            whenToUse: "When you want to provide a simple interface to a complex subsystem, or decouple a subsystem from clients and other subsystems.",
+                            whenNotToUse: "When clients need direct granular access to low-level subsystem components.",
+                            realWorld: "Spring JdbcTemplate, SLF4J logging facade."
+                        },
+                        uml: "Facade class referencing subsystem classes (Inventory, Payment, Shipping). Client interacts only with Facade.",
+                        code: `package structural.facade;
+
+class InventorySystem {
+    public boolean checkStock(String productId) {
+        System.out.println("Checking stock for product: " + productId);
+        return true;
+    }
+}
+
+class PaymentGateway {
+    public void processPayment(double amount) {
+        System.out.println("Processing payment of $" + amount + " securely 💳");
+    }
+}
+
+class ShippingService {
+    public void arrangeShipping(String address) {
+        System.out.println("Arranging shipment to: " + address + " 📦");
+    }
+}
+
+// Facade
+class OrderFacade {
+    private final InventorySystem inventory = new InventorySystem();
+    private final PaymentGateway payment = new PaymentGateway();
+    private final ShippingService shipping = new ShippingService();
+
+    public void placeOrder(String productId, double amount, String address) {
+        System.out.println("--- Starting Order Workflow ---");
+        if (inventory.checkStock(productId)) {
+            payment.processPayment(amount);
+            shipping.arrangeShipping(address);
+            System.out.println("--- Order Placed Successfully! ---");
+        }
+    }
+}
+
+public class FacadeDemo {
+    public static void main(String[] args) {
+        OrderFacade facade = new OrderFacade();
+        facade.placeOrder("LAPTOP-99", 1200.00, "123 Silicon Valley, CA");
+    }
+}`,
+                        compileInstructions: "javac -d out src/structural/facade/FacadeDemo.java\njava -cp out structural.facade.FacadeDemo",
+                        codeFlow: "1. Client calls facade.placeOrder(...).\n2. Facade coordinates InventorySystem, PaymentGateway, and ShippingService in proper sequence.\n3. Client remains blissfully unaware of subsystem complexity.",
+                        comparison: "Without Facade, client code tightly couples to 5+ subsystem classes. With Facade, a single clean method invocation handles the entire workflow.",
+                        questions: [
+                            {
+                                id: "fad-q1",
+                                level: "Easy",
+                                question: "Does the Facade pattern prevent clients from accessing low-level subsystem classes?",
+                                answer: {
+                                    code: `// Facade simplifies usage but does NOT hide subsystem classes. Clients can still access them directly if needed.`,
+                                    explanation: "Facade is a structural simplification, not an encapsulation barrier. Subsystem classes remain fully accessible.",
+                                    relationships: "Client -> Facade -> Subsystem Classes (and direct access allowed).",
+                                    flow: "Direct or facilitated method calls.",
+                                    output: "Simplified client integration.",
+                                    why: "Provides convenience without sacrificing low-level flexibility.",
+                                    alternatives: "Mediator or Adapter."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["What is the difference between Facade and Adapter?"],
+                            scenarios: ["Refactoring a monolithic payment checkout flow into a single service entry point."],
+                            misconceptions: ["Assuming Facade encapsulates security like a firewall."],
+                            pros: ["Simplifies client usage", "Decouples clients from subsystem complexity"],
+                            cons: ["Can become a god object if it absorbs too much business logic."]
+                        },
+                        mistakes: ["Putting complex business logic inside the facade instead of delegating to domain services."]
+                    },
+                    {
+                        id: "composite",
+                        title: "5. Composite Pattern",
+                        type: "pattern",
+                        badge: "Structural",
+                        difficulty: "Medium",
+                        problem: "You are building a file system tree containing individual Files and Folders (which can contain other files and folders). Calculating total file size requires writing messy 'instanceof' checks recursively.",
+                        understand: "When your data forms a tree-like hierarchy where individual objects and compositions of objects must be treated uniformly, use the Composite pattern.",
+                        introduce: {
+                            name: "Composite Pattern",
+                            category: "Structural",
+                            intent: "Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly.",
+                            whenToUse: "When you want to represent part-whole hierarchies of objects, and clients need to ignore the difference between compositions and individual objects.",
+                            whenNotToUse: "When the tree structure is too flat or when leaf and composite nodes have vastly divergent interfaces.",
+                            realWorld: "UI component trees (JPanel containing JButtons and JPanels), File systems."
+                        },
+                        uml: "Component interface, Leaf representing end objects, Composite holding a collection of Components.",
+                        code: `package structural.composite;
+
+import java.util.List;
+import java.util.ArrayList;
+
+interface FileSystemItem {
+    void showDetails();
+}
+
+class FileItem implements FileSystemItem {
+    private final String name;
+    private final int size;
+
+    public FileItem(String name, int size) {
+        this.name = name;
+        this.size = size;
+    }
+
+    @Override
+    public void showDetails() {
+        System.out.println("File: " + name + " (" + size + " KB)");
+    }
+}
+
+class DirectoryItem implements FileSystemItem {
+    private final String name;
+    private final List<FileSystemItem> children = new ArrayList<>();
+
+    public DirectoryItem(String name) { this.name = name; }
+
+    public void add(FileSystemItem item) { children.add(item); }
+
+    @Override
+    public void showDetails() {
+        System.out.println("Directory: " + name);
+        for (FileSystemItem item : children) {
+            item.showDetails();
+        }
+    }
+}
+
+public class CompositeDemo {
+    public static void main(String[] args) {
+        DirectoryItem root = new DirectoryItem("Root");
+        root.add(new FileItem("Resume.pdf", 500));
+        
+        DirectoryItem docs = new DirectoryItem("Documents");
+        docs.add(new FileItem("Notes.txt", 50));
+        root.add(docs);
+
+        root.showDetails();
+    }
+}`,
+                        compileInstructions: "javac -d out src/structural/composite/CompositeDemo.java\njava -cp out structural.composite.CompositeDemo",
+                        codeFlow: "1. Client calls showDetails() on root DirectoryItem.\n2. DirectoryItem prints its name and iterates over children.\n3. If child is FileItem, prints file details. If child is DirectoryItem, recurses automatically.",
+                        comparison: "Without Composite, complex type-checking code handles files and folders differently. With Composite, uniform polymorphism handles trees effortlessly.",
+                        questions: [
+                            {
+                                id: "cmp-q1",
+                                level: "Medium",
+                                question: "What is the transparency vs safety trade-off in the Composite pattern?",
+                                answer: {
+                                    code: `// Transparency: Define add/remove in Component interface (leaves throw UnsupportedOperationException).\n// Safety: Define add/remove only in Composite class (leaves don't have them, but uniform treatment is lost).`,
+                                    explanation: "Transparency means leaves and composites share the exact same interface (easier client code, potential runtime exceptions on leaves). Safety means tree management methods reside only in composites (safer, but requires type casting).",
+                                    relationships: "Component interface design -> Leaf vs Composite capability exposure.",
+                                    flow: "Interface method contract vs Type casting checks.",
+                                    output: "Design trade-off resolution.",
+                                    why: "Demonstrates core API design decisions in object-oriented structures.",
+                                    alternatives: "Visitor pattern for external tree traversal operations."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["When is it appropriate to use the Composite pattern?"],
+                            scenarios: ["Designing an organization hierarchy tree with employees and department managers."],
+                            misconceptions: ["Assuming composite trees cannot have circular references (they shouldn't)."],
+                            pros: ["Simplifies client code when working with complex tree hierarchies", "Easy to add new kinds of components"],
+                            cons: ["Can make design overly general; difficult to restrict components in a tree."]
+                        },
+                        mistakes: ["Failing to handle circular references in tree structures leading to infinite recursion."]
+                    },
+                    {
+                        id: "bridge",
+                        title: "6. Bridge Pattern",
+                        type: "pattern",
+                        badge: "Structural",
+                        difficulty: "Hard",
+                        problem: "You have a Shape hierarchy (Circle, Square) that needs to support multiple colors (Red, Blue). Using inheritance creates 4 classes (RedCircle, BlueCircle, RedSquare, BlueSquare). If you add 3 new shapes and 2 new colors, class count explodes to 15.",
+                        understand: "When an abstraction and its implementation can vary independently, inheritance binds them tightly. The Bridge pattern decouples an abstraction from its implementation so the two can vary independently.",
+                        introduce: {
+                            name: "Bridge Pattern",
+                            category: "Structural",
+                            intent: "Decouple an abstraction from its implementation so that the two can vary independently.",
+                            whenToUse: "When you want to avoid a permanent binding between an abstraction and its implementation, or when both classes should be extensible independently via subclassing.",
+                            whenNotToUse: "When there is only one implementation and no future variation expected.",
+                            realWorld: "JDBC driver manager bridging database abstraction with specific vendor drivers."
+                        },
+                        uml: "Abstraction holding a reference to Implementor interface. RefinedAbstraction extends Abstraction, ConcreteImplementor implements Implementor.",
+                        code: `package structural.bridge;
+
+// Implementor
+interface Device {
+    boolean isEnabled();
+    void enable();
+    void disable();
+}
+
+class TV implements Device {
+    private boolean on = false;
+    public boolean isEnabled() { return on; }
+    public void enable() { on = true; System.out.println("TV turned ON 📺"); }
+    public void disable() { on = false; System.out.println("TV turned OFF"); }
+}
+
+// Abstraction
+abstract class RemoteControl {
+    protected final Device device;
+    public RemoteControl(Device device) { this.device = device; }
+    public abstract void togglePower();
+}
+
+class AdvancedRemote extends RemoteControl {
+    public AdvancedRemote(Device device) { super(device); }
+    public void togglePower() {
+        if (device.isEnabled()) device.disable();
+        else device.enable();
+    }
+}
+
+public class BridgeDemo {
+    public static void main(String[] args) {
+        Device tv = new TV();
+        RemoteControl remote = new AdvancedRemote(tv);
+        remote.togglePower();
+        remote.togglePower();
+    }
+}`,
+                        compileInstructions: "javac -d out src/structural/bridge/BridgeDemo.java\njava -cp out structural.bridge.BridgeDemo",
+                        codeFlow: "1. AdvancedRemote holds reference to TV device (Bridge).\n2. Client calls togglePower() on RemoteControl.\n3. Abstraction delegates action to Implementor device polymorphically.",
+                        comparison: "Without Bridge, Cartesian product explosion of subclasses occurs. With Bridge, Abstraction and Implementor hierarchies evolve independently.",
+                        questions: [
+                            {
+                                id: "brg-q1",
+                                level: "Hard",
+                                question: "How does the Bridge pattern differ from the Adapter pattern?",
+                                answer: {
+                                    code: `// Bridge is designed upfront to let abstraction and implementation vary independently.\n// Adapter is used afterward to make unrelated or legacy classes work together.`,
+                                    explanation: "Bridge separates an interface from its implementation before coding. Adapter wraps an existing class after the fact to match an expected interface.",
+                                    relationships: "Upfront architectural separation vs Retrofit wrapper.",
+                                    flow: "Bridge composition vs Adapter translation.",
+                                    output: "Decoupled vs Integrated systems.",
+                                    why: "Clarifies intent and timing of pattern application.",
+                                    alternatives: "Strategy pattern."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["When would you choose Bridge over standard inheritance?"],
+                            scenarios: ["Designing cross-platform rendering engines supporting multiple OS graphics APIs."],
+                            misconceptions: ["Confusing Bridge with Adapter."],
+                            pros: ["Decouples implementation from interface", "Improves extensibility"],
+                            cons: ["Complicates code with multiple abstraction levels."]
+                        },
+                        mistakes: ["Applying Bridge when there is only a single static implementation."]
+                    },
+                    {
+                        id: "flyweight",
+                        title: "7. Flyweight Pattern",
+                        type: "pattern",
+                        badge: "Structural",
+                        difficulty: "Hard",
+                        problem: "You are building a text editor rendering 1 million characters. Each character object stores its font, size, color, and coordinate position, consuming gigabytes of RAM and causing OutOfMemoryError.",
+                        understand: "When an application needs to spawn massive numbers of similar objects consuming excessive RAM, share common state ('intrinsic state') across objects while passing unique state ('extrinsic state') as parameters.",
+                        introduce: {
+                            name: "Flyweight Pattern",
+                            category: "Structural",
+                            intent: "Use sharing to support large numbers of fine-grained objects efficiently.",
+                            whenToUse: "When an application spawns a massive number of objects, storage costs are high, and most object state can be made extrinsic.",
+                            whenNotToUse: "When object count is small or sharing overhead exceeds memory savings.",
+                            realWorld: "String pool in Java, database connection pooling caching prepared statements."
+                        },
+                        uml: "FlyweightFactory managing pool of shared Flyweights, Flyweight storing intrinsic state, Client supplying extrinsic state.",
+                        code: `package structural.flyweight;
+
+import java.util.HashMap;
+import java.util.Map;
+
+// Flyweight
+interface TreeType {
+    void draw(int x, int y);
+}
+
+class ConcreteTreeType implements TreeType {
+    private final String name;
+    private final String color;
+    private final String texture;
+
+    public ConcreteTreeType(String name, String color, String texture) {
+        this.name = name;
+        this.color = color;
+        this.texture = texture;
+    }
+
+    @Override
+    public void draw(int x, int y) {
+        System.out.println("Drawing " + color + " " + name + " tree with texture " + texture + " at (" + x + "," + y + ")");
+    }
+}
+
+// Flyweight Factory
+class TreeFactory {
+    private static final Map<String, TreeType> treeTypes = new HashMap<>();
+
+    public static TreeType getTreeType(String name, String color, String texture) {
+        String key = name + "-" + color + "-" + texture;
+        treeTypes.computeIfAbsent(key, k -> new ConcreteTreeType(name, color, texture));
+        return treeTypes.get(key);
+    }
+}
+
+public class FlyweightDemo {
+    public static void main(String[] args) {
+        // 1 million trees share only 3 distinct TreeType instances in memory
+        TreeType type1 = TreeFactory.getTreeType("Oak", "Green", "Rough");
+        type1.draw(10, 20);
+        
+        TreeType type2 = TreeFactory.getTreeType("Oak", "Green", "Rough");
+        type2.draw(50, 80);
+        
+        System.out.println("Are both instances identical in memory? " + (type1 == type2));
+    }
+}`,
+                        compileInstructions: "javac -d out src/structural/flyweight/FlyweightDemo.java\njava -cp out structural.flyweight.FlyweightDemo",
+                        codeFlow: "1. Client requests TreeType from TreeFactory.\n2. Factory checks cache; if exists, returns shared instance. If not, creates new.\n3. Client passes extrinsic coordinates (x, y) to draw().",
+                        comparison: "Without Flyweight, 1 million objects store duplicate configuration data wasting RAM. With Flyweight, shared intrinsic state reduces memory footprint by 99%.",
+                        questions: [
+                            {
+                                id: "flw-q1",
+                                level: "Hard",
+                                question: "What is the distinction between Intrinsic and Extrinsic state in the Flyweight pattern?",
+                                answer: {
+                                    code: `// Intrinsic: Immutable shared state stored inside the flyweight (e.g., font, color).\n// Extrinsic: Unique contextual state passed by client during method execution (e.g., x, y coordinates).`,
+                                    explanation: "Intrinsic state is context-independent and shareable. Extrinsic state depends on context and cannot be shared.",
+                                    relationships: "Shared Pool (Intrinsic) vs Client Context (Extrinsic).",
+                                    flow: "Factory lookup -> Shared instance execution with client coordinates.",
+                                    output: "High memory efficiency.",
+                                    why: "Enables massive object scaling.",
+                                    alternatives: "Standard object instantiation."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["How does Java's String Pool implement Flyweight principles?"],
+                            scenarios: ["Designing a particle engine for a game rendering 500,000 bullets simultaneously."],
+                            misconceptions: ["Assuming flyweight objects can have mutable extrinsic state."],
+                            pros: ["Massive RAM savings for large object counts"],
+                            cons: ["CPU overhead computing or transferring extrinsic state", "Code complexity"]
+                        },
+                        mistakes: ["Making intrinsic state mutable, leading to data corruption across shared instances."]
+                    }
+                ]
+            },
+            {
+                category: "Part 3 — Behavioral Patterns",
+                icon: "fa-brain",
+                items: [
+                    {
+                        id: "strategy",
+                        title: "1. Strategy Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Easy",
+                        problem: "Your e-commerce checkout system calculates shipping costs based on shipping methods (FedEx, UPS, DHL). Your code has a massive 'switch(shippingType)' statement that grows every time a new carrier is added, violating OCP.",
+                        understand: "When an algorithm changes based on runtime conditions, embedding conditional logic inside core classes creates rigid code. We extract each algorithm into separate strategy classes.",
+                        introduce: {
+                            name: "Strategy Pattern",
+                            category: "Behavioral",
+                            intent: "Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it.",
+                            whenToUse: "When you have multiple variants of an algorithm and want to switch between them dynamically at runtime.",
+                            whenNotToUse: "When there are only 1-2 simple algorithms that rarely change.",
+                            realWork: "Java Comparator.comparing(), Spring security authentication managers."
+                        },
+                        uml: "Strategy interface, ConcreteStrategies implementing calculate(), Context holding Strategy reference.",
+                        code: `package behavioral.strategy;
+
+interface ShippingStrategy {
+    double calculateCost(double weight);
+}
+
+class FedexStrategy implements ShippingStrategy {
+    public double calculateCost(double weight) {
+        return weight * 5.0;
+    }
+}
+
+class DhlStrategy implements ShippingStrategy {
+    public double calculateCost(double weight) {
+        return weight * 7.5;
+    }
+}
+
+// Context
+class ShippingContext {
+    private ShippingStrategy strategy;
+
+    public void setStrategy(ShippingStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public double executeCalculation(double weight) {
+        return strategy.calculateCost(weight);
+    }
+}
+
+public class StrategyDemo {
+    public static void main(String[] args) {
+        ShippingContext context = new ShippingContext();
+        
+        context.setStrategy(new FedexStrategy());
+        System.out.println("FedEx Shipping Cost: $" + context.executeCalculation(10.0));
+
+        context.setStrategy(new DhlStrategy());
+        System.out.println("DHL Shipping Cost:   $" + context.executeCalculation(10.0));
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/strategy/StrategyDemo.java\njava -cp out behavioral.strategy.StrategyDemo",
+                        codeFlow: "1. Client sets active strategy on ShippingContext.\n2. Client invokes executeCalculation().\n3. Context delegates computation to the active strategy object polymorphically.",
+                        comparison: "Without Strategy, massive switch statements require modifying core code constantly. With Strategy, new algorithms are added cleanly without touching existing code.",
+                        questions: [
+                            {
+                                id: "str-q1",
+                                level: "Easy",
+                                question: "How can Java 8+ lambdas simplify Strategy pattern implementations?",
+                                answer: {
+                                    code: `// Functional interface allows passing lambdas directly as strategies\nShippingStrategy fedex = weight -> weight * 5.0;\nSystem.out.println(fedex.calculateCost(10.0));`,
+                                    explanation: "If a strategy interface has only a single abstract method (functional interface), you don't need separate classes; you can pass lambda expressions directly.",
+                                    relationships: "Functional Interface -> Lambda expression implementation.",
+                                    flow: "Lambda invocation as strategy.",
+                                    output: "50.0",
+                                    why: "Eliminates boilerplate class files for simple stateless strategies.",
+                                    alternatives: "Full strategy classes when strategies maintain complex internal state."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["What is the difference between Strategy and State patterns?"],
+                            scenarios: ["Implementing dynamic discount pricing engines based on user loyalty tiers."],
+                            misconceptions: ["Thinking strategies should know about each other."],
+                            pros: ["Clean separation of algorithms", "Eliminates complex conditional switch statements", "Open/Closed Principle compliant"],
+                            cons: ["Client must be aware of different strategies and choose the appropriate one."]
+                        },
+                        mistakes: ["Creating unnecessary strategy classes for trivial one-line calculations."]
+                    },
+                    {
+                        id: "observer",
+                        title: "2. Observer Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Medium",
+                        problem: "Your Weather Station updates temperature readings. Multiple dashboard displays (Mobile App, Web UI, Desktop Widget) need instant notification whenever temperature changes. Polling is inefficient.",
+                        understand: "When one object changes state, all dependent objects must be notified automatically without tight coupling.",
+                        introduce: {
+                            name: "Observer Pattern",
+                            category: "Behavioral",
+                            intent: "Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.",
+                            whenToUse: "When an abstraction has two aspects, one dependent on the other, or when changes to one object require changing others without knowing who they are.",
+                            whenNotToUse: "When notification order matters critically or when circular observer chains cause infinite loops.",
+                            realWork: "Java EventListener, Spring ApplicationEventPublisher, RxJS/Reactive Streams."
+                        },
+                        uml: "Subject manages list of Observers (attach, detach, notify). ConcreteObservers implement update().",
+                        code: `package behavioral.observer;
+
+import java.util.List;
+import java.util.ArrayList;
+
+interface Observer {
+    void update(float temperature);
+}
+
+class PhoneDisplay implements Observer {
+    public void update(float temp) {
+        System.out.println("📱 Phone Display: Temperature updated to " + temp + "°C");
+    }
+}
+
+class WeatherStation {
+    private final List<Observer> observers = new ArrayList<>();
+    private float temperature;
+
+    public void addObserver(Observer o) { observers.add(o); }
+    public void removeObserver(Observer o) { observers.remove(o); }
+
+    public void setTemperature(float temperature) {
+        this.temperature = temperature;
+        notifyObservers();
+    }
+
+    private void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(temperature);
+        }
+    }
+}
+
+public class ObserverDemo {
+    public static void main(String[] args) {
+        WeatherStation station = new WeatherStation();
+        station.addObserver(new PhoneDisplay());
+
+        station.setTemperature(25.5f);
+        station.setTemperature(28.0f);
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/observer/ObserverDemo.java\njava -cp out behavioral.observer.ObserverDemo",
+                        codeFlow: "1. Observers register with WeatherStation.\n2. station.setTemperature() updates state.\n3. notifyObservers() iterates over list and invokes update() on all registered observers.",
+                        comparison: "Without Observer, subject tightly couples to all displays. With Observer, subject broadcasts changes to an interface, achieving loose coupling.",
+                        questions: [
+                            {
+                                id: "obs-q1",
+                                level: "Medium",
+                                question: "How does Spring Boot event publishing implement the Observer pattern?",
+                                answer: {
+                                    code: `@EventListener\npublic void handleOrderCreated(OrderCreatedEvent event) { /* process */ }`,
+                                    explanation: "Spring's ApplicationEventPublisher acts as the Subject, and methods annotated with @EventListener act as asynchronous or synchronous observers.",
+                                    relationships: "Publisher -> ApplicationEventMulticaster -> @EventListener methods.",
+                                    flow: "publisher.publishEvent() -> Event dispatch -> Observer method invocation.",
+                                    output: "Decoupled event-driven architecture.",
+                                    why: "Enables clean decoupling between business workflows and cross-cutting notification tasks.",
+                                    alternatives: "Kafka, RabbitMQ for distributed eventing."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["What is the push vs pull model in the Observer pattern?"],
+                            scenarios: ["Designing real-time stock ticker price alert systems."],
+                            misconceptions: ["Assuming observers are always notified in a guaranteed synchronous order."],
+                            pros: ["Loose coupling between subject and observers", "Dynamic subscription support"],
+                            cons: ["Memory leaks if observers forget to unregister", "Unexpected update cascades."]
+                        },
+                        mistakes: ["Forgetting to unregister observers causing severe memory leaks in long-lived applications."]
+                    },
+                    {
+                        id: "template-method",
+                        title: "3. Template Method Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Easy",
+                        problem: "You are building data miners for CSV, PDF, and DOC files. Each miner follows the exact same 3-step algorithm (Open File, Extract Data, Close File), but the extraction step differs per file format.",
+                        understand: "When algorithms share common procedural steps but differ in specific primitive steps, define the skeleton in a base class and let subclasses override specific steps.",
+                        introduce: {
+                            name: "Template Method Pattern",
+                            category: "Behavioral",
+                            intent: "Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm's structure.",
+                            whenToUse: "When you want to implement the invariant parts of an algorithm once and leave invariant behavior to subclasses.",
+                            whenNotToUse: "When subclasses need to alter the fundamental algorithm skeleton order.",
+                            realWork: "Java AbstractList, HttpServlet doGet/doPost workflow."
+                        },
+                        uml: "AbstractClass defines templateMethod() as final and abstract primitive methods. Subclasses implement primitive methods.",
+                        code: `package behavioral.templatemethod;
+
+abstract class DataMiner {
+    // Template Method (marked final so subclasses cannot alter algorithm skeleton)
+    public final void mine(String path) {
+        openFile(path);
+        extractData();
+        closeFile();
+    }
+
+    protected void openFile(String path) {
+        System.out.println("Opening file: " + path);
+    }
+
+    // Abstract primitive steps
+    protected abstract void extractData();
+
+    protected void closeFile() {
+        System.out.println("Closing file resource.\n");
+    }
+}
+
+class CsvDataMiner extends DataMiner {
+    protected void extractData() {
+        System.out.println("Extracting data using CSV comma parser 📊");
+    }
+}
+
+class PdfDataMiner extends DataMiner {
+    protected void extractData() {
+        System.out.println("Extracting data using OCR PDF text reader 📑");
+    }
+}
+
+public class TemplateMethodDemo {
+    public static void main(String[] args) {
+        DataMiner csvMiner = new CsvDataMiner();
+        csvMiner.mine("report.csv");
+
+        DataMiner pdfMiner = new PdfDataMiner();
+        pdfMiner.mine("invoice.pdf");
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/templatemethod/TemplateMethodDemo.java\njava -cp out behavioral.templatemethod.TemplateMethodDemo",
+                        codeFlow: "1. Client calls mine() on subclass instance.\n2. Base class executes openFile(), calls subclass's extractData(), then executes closeFile().",
+                        comparison: "Without Template Method, duplicate algorithm code exists across all miners. With Template Method, code reuse is maximized via inheritance control hooks.",
+                        questions: [
+                            {
+                                id: "tm-q1",
+                                level: "Easy",
+                                question: "What is a 'hook' method in the Template Method pattern?",
+                                answer: {
+                                    code: `protected boolean shouldSave() { return true; } // Hook method`,
+                                    explanation: "A hook is a method with a default (often empty) implementation in the abstract class. Subclasses can optionally override it to tune algorithm behavior without being forced to.",
+                                    relationships: "AbstractClass optional override hook.",
+                                    flow: "Optional execution branch inside template method.",
+                                    output: "Flexible algorithm customization.",
+                                    why: "Provides optional extension points without breaking subclass contracts.",
+                                    alternatives: "Strategy pattern."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["Why should the template method itself be marked final?"],
+                            scenarios: ["Designing enterprise batch job pipelines with uniform start/end logging and varying step logic."],
+                            misconceptions: ["Confusing Template Method with Strategy (Template uses inheritance; Strategy uses composition)."],
+                            pros: ["Code reuse", "Enforces strict algorithm structure control"],
+                            cons: ["Rigid inheritance hierarchy limits runtime flexibility."]
+                        },
+                        mistakes: ["Allowing subclasses to override the main template method skeleton."]
+                    },
+                    {
+                        id: "command",
+                        title: "4. Command Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Medium",
+                        problem: "You are building a Home Automation remote control. Buttons need to trigger arbitrary home devices (Lights, AC, Audio) without the remote knowing specific device APIs, and you need support for Undo/Redo operations.",
+                        understand: "When you need to parameterize objects with operations, queue requests, or support undoable actions, encapsulate a request as a standalone object.",
+                        introduce: {
+                            name: "Command Pattern",
+                            category: "Behavioral",
+                            intent: "Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.",
+                            whenToUse: "When you want to parameterize objects by execution action, queue requests, or implement undo/redo functionality.",
+                            whenNotToUse: "When commands are extremely trivial and direct method calls suffice.",
+                            realWorld: "GUI buttons and menu items, transaction logs, job schedulers."
+                        },
+                        uml: "Command interface with execute() and undo(), ConcreteCommand holding receiver reference, Invoker triggering commands.",
+                        code: `package behavioral.command;
+
+interface Command {
+    void execute();
+    void undo();
+}
+
+class Light {
+    public void turnOn() { System.out.println("Light is ON 💡"); }
+    public void turnOff() { System.out.println("Light is OFF"); }
+}
+
+class TurnOnCommand implements Command {
+    private final Light light;
+
+    public TurnOnCommand(Light light) { this.light = light; }
+
+    public void execute() { light.turnOn(); }
+    public void undo() { light.turnOff(); }
+}
+
+class RemoteControl {
+    private Command command;
+
+    public void setCommand(Command command) { this.command = command; }
+    public void pressButton() { command.execute(); }
+    public void pressUndo() { command.undo(); }
+}
+
+public class CommandDemo {
+    public static void main(String[] args) {
+        Light livingRoomLight = new Light();
+        Command turnOn = new TurnOnCommand(livingRoomLight);
+
+        RemoteControl remote = new RemoteControl();
+        remote.setCommand(turnOn);
+        remote.pressButton();
+        remote.pressUndo();
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/command/CommandDemo.java\njava -cp out behavioral.command.CommandDemo",
+                        codeFlow: "1. Client creates command wrapping receiver (Light).\n2. RemoteControl stores and invokes execute() or undo().\n3. Action is performed cleanly decoupled from invoker.",
+                        comparison: "Without Command, invoker couples directly to receiver logic. With Command, requests become first-class objects supporting queuing and undo operations.",
+                        questions: [
+                            {
+                                id: "cmd-q1",
+                                level: "Medium",
+                                question: "How does the Command pattern enable Undo/Redo functionality?",
+                                answer: {
+                                    code: `// Command objects store state prior to execution, allowing reverse state restoration in undo().`,
+                                    explanation: "By maintaining execution history stacks, executed commands can have their undo() method invoked in reverse order to restore previous system states.",
+                                    relationships: "Invoker maintains Command History Stack -> execute() / undo().",
+                                    flow: "Command execution pushed to stack -> Undo pops and calls undo().",
+                                    output: "State reverted.",
+                                    why: "Essential for text editors, drawing software, and transactional wizards.",
+                                    alternatives: "Memento pattern."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["How is the Command pattern used in database transaction logs?"],
+                            scenarios: ["Building a macro recorder that records a sequence of user actions and replays them."],
+                            misconceptions: ["Assuming commands must contain all business logic instead of delegating to receivers."],
+                            pros: ["Decouples invoker from receiver", "Supports queues, logging, and undo/redo"],
+                            cons: ["Creates many small command classes for every action."]
+                        },
+                        mistakes: ["Failing to store prior state needed for undo operations."]
+                    },
+                    {
+                        id: "chain-of-responsibility",
+                        title: "5. Chain of Responsibility Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Medium",
+                        problem: "You are building an HTTP request pipeline. Incoming requests must pass through Authentication, Rate Limiting, Role Authorization, and Logging filters before reaching the controller.",
+                        understand: "When multiple objects can handle a request and the handler isn't known beforehand, chain the handlers together and pass the request along the chain until an object handles it.",
+                        introduce: {
+                            name: "Chain of Responsibility Pattern",
+                            category: "Behavioral",
+                            intent: "Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request. Chain the receiving objects and pass the request along the chain.",
+                            whenToUse: "When more than one object may handle a request, and the handler isn't known a priori, or when you want to issue a request to one of several objects without specifying the receiver explicitly.",
+                            whenNotToUse: "When requests must be handled by all handlers or when chain length degrades performance.",
+                            realWorld: "Servlet Filters, Spring Security FilterChain, Exception handling handlers."
+                        },
+                        uml: "Handler abstract class with setNext() and handleRequest(), ConcreteHandlers processing or passing along.",
+                        code: `package behavioral.chain;
+
+abstract class Handler {
+    protected Handler next;
+
+    public Handler setNext(Handler next) {
+        this.next = next;
+        return next;
+    }
+
+    public abstract void handle(String request);
+}
+
+class AuthHandler extends Handler {
+    public void handle(String request) {
+        System.out.println("1. Checking Authentication for: " + request);
+        if (next != null) next.handle(request);
+    }
+}
+
+class RateLimitHandler extends Handler {
+    public void handle(String request) {
+        System.out.println("2. Checking Rate Limits for: " + request);
+        if (next != null) next.handle(request);
+    }
+}
+
+public class ChainDemo {
+    public static void main(String[] args) {
+        Handler chain = new AuthHandler();
+        chain.setNext(new RateLimitHandler());
+
+        chain.handle("GET /api/orders");
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/chain/ChainDemo.java\njava -cp out behavioral.chain.ChainDemo",
+                        codeFlow: "1. Request sent to first handler (AuthHandler).\n2. Handler processes and forwards to next handler in chain.\n3. Request flows through all configured filters sequentially.",
+                        comparison: "Without Chain, massive conditional blocks manage request filtering. With Chain, filters are cleanly modularized and dynamically configurable.",
+                        questions: [
+                            {
+                                id: "cor-q1",
+                                level: "Medium",
+                                question: "What is the difference between a terminating and non-terminating Chain of Responsibility?",
+                                answer: {
+                                    code: `// Non-terminating: Every handler processes the request (e.g., logging filters).\n// Terminating: First handler that can handle the request stops the chain (e.g., exception catchers).`,
+                                    explanation: "In a terminating chain, processing stops as soon as a handler handles the request. In a non-terminating chain, every handler in the chain executes its logic.",
+                                    relationships: "Chain flow control -> conditional break vs full propagation.",
+                                    flow: "If handled -> break; else -> next.handle().",
+                                    output: "Selective or exhaustive request processing.",
+                                    why: "Determines whether filters act as interceptors or exclusive handlers.",
+                                    alternatives: "Observer pattern."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["How does Spring Security implement the FilterChain?"],
+                            scenarios: ["Designing ATM cash dispensing machines where handlers dispense $100, $50, $20 bills sequentially."],
+                            misconceptions: ["Assuming requests are guaranteed to be handled by the end of the chain."],
+                            pros: ["Decouples sender from receivers", "Flexible dynamic chain configuration"],
+                            cons: ["Hard to debug if requests fall off the end unhandled."]
+                        },
+                        mistakes: ["Forgetting to link the next handler, causing the chain to terminate prematurely."]
+                    },
+                    {
+                        id: "state",
+                        title: "6. State Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Medium",
+                        problem: "You are building a Media Player or Order Fulfillment Workflow with states like (New, Processing, Shipped, Delivered, Cancelled). Your code is riddled with complex 'if (state == ...)' switch blocks for every action.",
+                        understand: "When an object's behavior depends heavily on its internal state and changes its behavior at runtime accordingly, encapsulate state behaviors into separate state classes.",
+                        introduce: {
+                            name: "State Pattern",
+                            category: "Behavioral",
+                            intent: "Allow an object to alter its behavior when its internal state changes. The object will appear to change its class.",
+                            whenToUse: "When an object's behavior depends on its state, and it must change its behavior at runtime depending on that state, with massive conditional state switch statements.",
+                            whenNotToUse: "When state transitions are few and simple (basic booleans suffice).",
+                            realWorld: "Vending machine state handlers, document approval workflows."
+                        },
+                        uml: "State interface, ConcreteStates implementing state-specific behavior, Context holding current State reference.",
+                        code: `package behavioral.state;
+
+interface OrderState {
+    void next(OrderContext context);
+    void prev(OrderContext context);
+    void printStatus();
+}
+
+class NewState implements OrderState {
+    public void next(OrderContext context) { context.setState(new ProcessingState()); }
+    public void prev(OrderContext context) { System.out.println("Already at root state."); }
+    public void printStatus() { System.out.println("Order Status: NEW 📝"); }
+}
+
+class ProcessingState implements OrderState {
+    public void next(OrderContext context) { context.setState(new ShippedState()); }
+    public void prev(OrderContext context) { context.setState(new NewState()); }
+    public void printStatus() { System.out.println("Order Status: PROCESSING ⚙️"); }
+}
+
+class ShippedState implements OrderState {
+    public void next(OrderContext context) { System.out.println("Order already delivered."); }
+    public void prev(OrderContext context) { context.setState(new ProcessingState()); }
+    public void printStatus() { System.out.println("Order Status: SHIPPED 🚚"); }
+}
+
+class OrderContext {
+    private OrderState state = new NewState();
+
+    public void setState(OrderState state) { this.state = state; }
+    public void nextState() { state.next(this); }
+    public void prevState() { state.prev(this); }
+    public void printStatus() { state.printStatus(); }
+}
+
+public class StateDemo {
+    public static void main(String[] args) {
+        OrderContext order = new OrderContext();
+        order.printStatus();
+        
+        order.nextState();
+        order.printStatus();
+
+        order.nextState();
+        order.printStatus();
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/state/StateDemo.java\njava -cp out behavioral.state.StateDemo",
+                        codeFlow: "1. Context delegates actions to current OrderState instance.\n2. State method execution updates context state reference.\n3. Subsequent method calls execute new state behavior.",
+                        comparison: "Without State, massive switch statements handle conditional logic. With State, each state encapsulates its own behavior and transition rules cleanly.",
+                        questions: [
+                            {
+                                id: "st-q1",
+                                level: "Medium",
+                                question: "What is the primary difference between the Strategy pattern and the State pattern?",
+                                answer: {
+                                    code: `// Strategy: Client explicitly chooses and sets the algorithm strategy.\n// State: States usually know about and trigger transitions to succeeding states automatically.`,
+                                    explanation: "While structurally identical (both use composition with an interface), Strategy represents alternative ways to accomplish a task chosen by the client, whereas State represents internal lifecycle phases transitioning autonomously.",
+                                    relationships: "Structural twin with divergent behavioral intent.",
+                                    flow: "Client-driven selection vs Internal state-driven transitions.",
+                                    output: "Algorithmic flexibility vs Lifecycle state management.",
+                                    why: "Clarifies architectural intent and design selection.",
+                                    alternatives: "Finite State Machine (FSM) libraries."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["Who should define state transitions: the Context or the State classes?"],
+                            scenarios: ["Designing an ATM cash withdrawal session state machine."],
+                            misconceptions: ["Confusing State pattern with Strategy pattern."],
+                            pros: ["Eliminates massive switch-case conditional statements", "Explicit state encapsulation"],
+                            cons: ["Increases total number of classes in the application."]
+                        },
+                        mistakes: ["Putting state transition logic entirely in the context instead of state classes."]
+                    },
+                    {
+                        id: "iterator",
+                        title: "7. Iterator Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Easy",
+                        problem: "Your custom collection data structure (e.g., Graph or Tree) exposes its internal array or linked list structure directly to clients, breaking encapsulation and coupling clients to internal data representations.",
+                        understand: "When you need to traverse elements of a collection sequentially without exposing its underlying representation (arrays, trees, graphs), use an iterator.",
+                        introduce: {
+                            name: "Iterator Pattern",
+                            category: "Behavioral",
+                            intent: "Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation.",
+                            whenToUse: "When your collection has a complex underlying data structure and you want to hide its complexity from clients while supporting uniform traversal.",
+                            whenNotToUse: "When simple built-in for-each loops over standard arrays/lists suffice.",
+                            realWorld: "java.util.Iterator, java.util.Spliterator."
+                        },
+                        uml: "Iterator interface (hasNext(), next()), Aggregate interface (createIterator()), ConcreteAggregate and ConcreteIterator.",
+                        code: `package behavioral.iterator;
+
+import java.util.List;
+import java.util.ArrayList;
+
+interface Iterator<T> {
+    boolean hasNext();
+    T next();
+}
+
+interface Aggregate<T> {
+    Iterator<T> createIterator();
+}
+
+class BookCollection implements Aggregate<String> {
+    private final List<String> books = new ArrayList<>();
+
+    public void addBook(String book) { books.add(book); }
+
+    public Iterator<String> createIterator() {
+        return new BookIterator(this.books);
+    }
+}
+
+class BookIterator implements Iterator<String> {
+    private final List<String> books;
+    private int index = 0;
+
+    public BookIterator(List<String> books) { this.books = books; }
+
+    public boolean hasNext() { return index < books.size(); }
+    public String next() { return books.get(index++); }
+}
+
+public class IteratorDemo {
+    public static void main(String[] args) {
+        BookCollection collection = new BookCollection();
+        collection.addBook("Design Patterns (GoF)");
+        collection.addBook("Clean Code");
+
+        Iterator<String> iterator = collection.createIterator();
+        while (iterator.hasNext()) {
+            System.out.println("Book: " + iterator.next());
+        }
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/iterator/IteratorDemo.java\njava -cp out behavioral.iterator.IteratorDemo",
+                        codeFlow: "1. Client requests iterator from collection aggregate.\n2. Client loops using hasNext() and next() without knowing internal list structure.",
+                        comparison: "Without Iterator, clients are tightly coupled to collection internal arrays. With Iterator, traversal is decoupled from data storage.",
+                        questions: [
+                            {
+                                id: "it-q1",
+                                level: "Easy",
+                                question: "How does Java's Iterable and Iterator interface power the enhanced for-each loop?",
+                                answer: {
+                                    code: `for (String book : collection) { /* ... */ }`,
+                                    explanation: "Any class implementing java.lang.Iterable can be used in Java's for-each loop syntax. The compiler automatically translates it into iterator calls behind the scenes.",
+                                    relationships: "Iterable -> Iterator -> while(hasNext()) next().",
+                                    flow: "For-each loop syntactic sugar translated by compiler.",
+                                    output: "Clean sequential traversal.",
+                                    why: "Standardized traversal across all Java collections.",
+                                    alternatives: "Java 8 Streams."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["What is a fail-fast iterator in Java Collections?"],
+                            scenarios: ["Writing custom graph traversal iterators (BFS/DFS)."],
+                            misconceptions: ["Assuming iterators are thread-safe by default."],
+                            pros: ["Encapsulates underlying collection structure", "Supports multiple simultaneous traversals"],
+                            cons: ["Overkill for simple list iterations."]
+                        },
+                        mistakes: ["Modifying a collection during iteration without using iterator.remove(), causing ConcurrentModificationException."]
+                    },
+                    {
+                        id: "mediator",
+                        title: "8. Mediator Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Hard",
+                        problem: "You are building an Air Traffic Control system. Multiple airplanes (Colleagues) need to communicate with each other regarding landing slots. Direct communication creates a messy N:N dependency web.",
+                        understand: "When communication between objects becomes too complex and tangled (N:N coupling), introduce a central mediator object that coordinates all inter-object communications (1:N coupling).",
+                        introduce: {
+                            name: "Mediator Pattern",
+                            category: "Behavioral",
+                            intent: "Define an object that encapsulates how a set of objects interact. Mediator promotes loose coupling by keeping objects from referring to each other explicitly, and it lets you vary their interaction independently.",
+                            whenToUse: "When a set of objects communicate in well-defined but complex ways resulting in spaghetti dependencies.",
+                            whenNotToUse: "When communication is simple and direct without mutual coordination.",
+                            realWorld: "Spring DispatcherServlet coordinating controllers and views, chat room servers."
+                        },
+                        uml: "Mediator interface, ConcreteMediator holding references to all Colleagues, Colleague communicating via Mediator.",
+                        code: `package behavioral.mediator;
+
+interface AirTrafficMediator {
+    void registerRunway(Runway runway);
+    void registerFlight(Flight flight);
+    boolean isLandingAllowed();
+}
+
+class ControlTower implements AirTrafficMediator {
+    private Runway runway;
+    private Flight flight;
+
+    public void registerRunway(Runway runway) { this.runway = runway; }
+    public void registerFlight(Flight flight) { this.flight = flight; }
+
+    public boolean isLandingAllowed() {
+        System.out.println("Control tower coordinating landing clearance...");
+        return true;
+    }
+}
+
+class Flight {
+    private final AirTrafficMediator mediator;
+    public Flight(AirTrafficMediator mediator) { this.mediator = mediator; }
+
+    public void land() {
+        if (mediator.isLandingAllowed()) {
+            System.out.println("Flight landing granted successfully ✈️");
+        }
+    }
+}
+
+class Runway {
+    private final AirTrafficMediator mediator;
+    public Runway(AirTrafficMediator mediator) { this.mediator = mediator; }
+}
+
+public class MediatorDemo {
+    public static void main(String[] args) {
+        ControlTower tower = new ControlTower();
+        Flight flight = new Flight(tower);
+        Runway runway = new Runway(tower);
+
+        tower.registerFlight(flight);
+        tower.registerRunway(runway);
+
+        flight.land();
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/mediator/MediatorDemo.java\njava -cp out behavioral.mediator.MediatorDemo",
+                        codeFlow: "1. Flight wants to land, queries Mediator (ControlTower).\n2. Mediator checks status across Runway and other registered colleagues.\n3. Clearance granted without direct flight-to-runway coupling.",
+                        comparison: "Without Mediator, N airplane objects communicate directly in an unmaintainable web. With Mediator, all communication passes through a single centralized controller.",
+                        questions: [
+                            {
+                                id: "med-q1",
+                                level: "Hard",
+                                question: "What is the danger of creating a 'God Mediator' anti-pattern?",
+                                answer: {
+                                    code: `// When the mediator absorbs all business logic from colleagues, it becomes an unmaintainable God Object.`,
+                                    explanation: "If the mediator becomes overly complex, it violates the Single Responsibility Principle, concentrating all system intelligence in one massive class.",
+                                    relationships: "Mediator absorbs all colleague logic -> God Object anti-pattern.",
+                                    flow: "Centralized coordination overload.",
+                                    output: "High maintenance coupling risk.",
+                                    why: "Highlights the architectural trade-off of centralization.",
+                                    alternatives: "Observer pattern or Event Bus."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["When would you choose Mediator over Observer?"],
+                            scenarios: ["Designing aircraft cockpit dashboard button interaction controllers."],
+                            misconceptions: ["Assuming mediator must be a singleton."],
+                            pros: ["Reduces coupling between colleagues", "Centralizes complex communication logic"],
+                            cons: ["Mediator can become a monolithic God Object."]
+                        },
+                        mistakes: ["Putting core domain business logic inside the mediator instead of keeping it strictly focused on communication coordination."]
+                    },
+                    {
+                        id: "memento",
+                        title: "9. Memento Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Medium",
+                        problem: "You are building a Text Editor with an Undo feature. To support undo, you need to save snapshots of the editor's internal text state without violating encapsulation by exposing private fields.",
+                        understand: "When you need to capture and externalize an object's internal state so that the object can be restored later without violating encapsulation, use Memento.",
+                        introduce: {
+                            name: "Memento Pattern",
+                            category: "Behavioral",
+                            intent: "Without violating encapsulation, capture and externalize an object's internal state so that the object can be restored to this state later.",
+                            whenToUse: "When you need to save snapshots of an object's state to be able to restore it later (Undo/Rollback mechanisms).",
+                            whenNotToUse: "When object state is massive and saving snapshots frequently consumes excessive memory.",
+                            realWorld: "Game save checkpoints, transaction rollback states."
+                        },
+                        uml: "Originator creates memento and restores state, Memento stores internal state securely, Caretaker manages history list of mementos.",
+                        code: `package behavioral.memento;
+
+import java.util.List;
+import java.util.ArrayList;
+
+// Memento
+class EditorMemento {
+    private final String content;
+    public EditorMemento(String content) { this.content = content; }
+    public String getContent() { return content; }
+}
+
+// Originator
+class TextEditor {
+    private String content;
+
+    public void setContent(String content) { this.content = content; }
+    public String getContent() { return content; }
+
+    public EditorMemento save() { return new EditorMemento(content); }
+    public void restore(EditorMemento memento) { this.content = memento.getContent(); }
+}
+
+// Caretaker
+class History {
+    private final List<EditorMemento> history = new ArrayList<>();
+
+    public void push(EditorMemento memento) { history.add(memento); }
+    public EditorMemento pop() {
+        if (history.isEmpty()) return null;
+        return history.remove(history.size() - 1);
+    }
+}
+
+public class MementoDemo {
+    public static void main(String[] args) {
+        TextEditor editor = new TextEditor();
+        History history = new History();
+
+        editor.setContent("Version 1");
+        history.push(editor.save());
+
+        editor.setContent("Version 2 - Updated");
+        System.out.println("Current: " + editor.getContent());
+
+        editor.restore(history.pop());
+        System.out.println("Restored: " + editor.getContent());
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/memento/MementoDemo.java\njava -cp out behavioral.memento.MementoDemo",
+                        codeFlow: "1. TextEditor (Originator) creates EditorMemento snapshot.\n2. Caretaker stores memento in history stack.\n3. Editor restores previous state by passing memento back.",
+                        comparison: "Without Memento, external objects access private fields breaking encapsulation. With Memento, internal state is encapsulated securely inside snapshot objects.",
+                        questions: [
+                            {
+                                id: "mem-q1",
+                                level: "Medium",
+                                question: "How does the Memento pattern preserve object encapsulation?",
+                                answer: {
+                                    code: `// Memento keeps state private; only the Originator can read/write memento internal fields.`,
+                                    explanation: "The Caretaker only holds an opaque reference to the Memento interface/class without accessing its internal fields, ensuring strict encapsulation.",
+                                    relationships: "Caretaker holds opaque Memento -> Originator accesses internals.",
+                                    flow: "Snapshot storage without field exposure.",
+                                    output: "Secure encapsulation preserved.",
+                                    why: "Prevents external classes from meddling with object internals.",
+                                    alternatives: "Command pattern."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["What are the memory implications of saving frequent mementos in large applications?"],
+                            scenarios: ["Designing undo/redo stacks for vector graphic design applications."],
+                            misconceptions: ["Assuming mementos should allow modification of stored states."],
+                            pros: ["Preserves encapsulation", "Simplifies undo/rollback workflows"],
+                            cons: ["High memory consumption if state objects are large and saved frequently."]
+                        },
+                        mistakes: ["Exposing setter methods on Memento objects to the Caretaker, breaking encapsulation."]
+                    },
+                    {
+                        id: "visitor",
+                        title: "10. Visitor Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Hard",
+                        problem: "You have a complex document tree of Exportable elements (PdfNode, XmlNode, CsvNode). You need to add new operations (e.g., ExportToJSON, CalculateChecksum, SpellCheck) without modifying every single node class.",
+                        understand: "When you have a stable class hierarchy and want to execute new operations across those objects without modifying their classes, use the Visitor pattern.",
+                        introduce: {
+                            name: "Visitor Pattern",
+                            category: "Behavioral",
+                            intent: "Represent an operation to be performed on the elements of an object structure. Visitor lets you define a new operation without changing the classes of the elements on which it operates.",
+                            whenToUse: "When an object structure contains many classes of objects with differing interfaces, and you want to execute operations across these classes without polluting their code.",
+                            whenNotToUse: "When the object structure classes change frequently (adding a new element class requires updating all visitors).",
+                            realWorld: "AST compilers, code linters, document exporters."
+                        },
+                        uml: "Visitor interface with visit(ElementA), Element interface with accept(Visitor), ConcreteVisitor implementing operations.",
+                        code: `package behavioral.visitor;
+
+interface DocumentElement {
+    void accept(DocumentVisitor visitor);
+}
+
+class TextNode implements DocumentElement {
+    public void accept(DocumentVisitor visitor) { visitor.visit(this); }
+}
+
+class ImageNode implements DocumentElement {
+    public void accept(DocumentVisitor visitor) { visitor.visit(this); }
+}
+
+interface DocumentVisitor {
+    void visit(TextNode node);
+    void visit(ImageNode node);
+}
+
+class ExportToJsonVisitor implements DocumentVisitor {
+    public void visit(TextNode node) { System.out.println("Exporting TextNode to JSON 📄"); }
+    public void visit(ImageNode node) { System.out.println("Exporting ImageNode to JSON 🖼️"); }
+}
+
+public class VisitorDemo {
+    public static void main(String[] args) {
+        DocumentElement[] elements = { new TextNode(), new ImageNode() };
+        DocumentVisitor exportVisitor = new ExportToJsonVisitor();
+
+        for (DocumentElement e : elements) {
+            e.accept(exportVisitor);
+        }
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/visitor/VisitorDemo.java\njava -cp out behavioral.visitor.VisitorDemo",
+                        codeFlow: "1. Client calls accept(visitor) on DocumentElement.\n2. Element dispatches call back to visitor via visit(this) (Double Dispatch).\n3. Visitor executes operation specific to element type.",
+                        comparison: "Without Visitor, adding new operations requires modifying every node class. With Visitor, new operations are encapsulated entirely in new visitor classes.",
+                        questions: [
+                            {
+                                id: "vis-q1",
+                                level: "Hard",
+                                question: "What is 'Double Dispatch' in the context of the Visitor pattern?",
+                                answer: {
+                                    code: `// First dispatch: element.accept(visitor) (dispatches on element type).\n// Second dispatch: visitor.visit(this) (dispatches on visitor and element type).`,
+                                    explanation: "Standard Java method dispatch is single-dispatch (polymorphism based on receiver type). Visitor achieves double dispatch by letting the receiver invoke a method on the argument, resolving both object and visitor types at runtime.",
+                                    relationships: "Element type + Visitor type runtime resolution.",
+                                    flow: "accept() -> visit() method overload resolution.",
+                                    output: "Polymorphic operation execution across hierarchies.",
+                                    why: "Enables adding operations without modifying class hierarchies.",
+                                    alternatives: "Pattern matching in Java 17+ switch expressions."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["What is the main drawback of the Visitor pattern when adding new element classes?"],
+                            scenarios: ["Designing AST analysis passes in programming language compilers."],
+                            misconceptions: ["Thinking visitor makes adding new element types easier (it makes adding operations easier, but adding elements harder)."],
+                            pros: ["Easy to add new operations without modifying element classes", "Gathers related operations in one place"],
+                            cons: ["Hard to add new element classes because all visitors must be updated."]
+                        },
+                        mistakes: ["Using Visitor when the element class hierarchy is volatile and changes frequently."]
+                    },
+                    {
+                        id: "interpreter",
+                        title: "11. Interpreter Pattern",
+                        type: "pattern",
+                        badge: "Behavioral",
+                        difficulty: "Hard",
+                        problem: "You are building a custom business rule engine or arithmetic expression evaluator. Users write queries like 'x AND (y OR z)', and you need to parse and evaluate these expressions dynamically.",
+                        understand: "When you need to evaluate grammar or expressions in a specialized domain, define a representation for its grammar along with an interpreter that uses the representation to interpret sentences.",
+                        introduce: {
+                            name: "Interpreter Pattern",
+                            category: "Behavioral",
+                            intent: "Given a language, define a representation for its grammar along with an interpreter that uses the representation to interpret sentences in the language.",
+                            whenToUse: "When there is a language to interpret, and you can represent statements as abstract syntax trees (AST).",
+                            whenNotToUse: "When grammar is complex (use parser generators like ANTLR instead).",
+                            realWorld: "SQL expression parsers, regular expression engines, Spring SpEL (Spring Expression Language)."
+                        },
+                        uml: "Expression interface with interpret(), TerminalExpression evaluating leaf nodes, NonTerminalExpression combining sub-expressions.",
+                        code: `package behavioral.interpreter;
+
+interface Expression {
+    boolean interpret(String context);
+}
+
+class TerminalExpression implements Expression {
+    private final String data;
+    public TerminalExpression(String data) { this.data = data; }
+
+    public boolean interpret(String context) {
+        return context.contains(data);
+    }
+}
+
+class OrExpression implements Expression {
+    private final Expression expr1;
+    private final Expression expr2;
+
+    public OrExpression(Expression expr1, Expression expr2) {
+        this.expr1 = expr1;
+        this.expr2 = expr2;
+    }
+
+    public boolean interpret(String context) {
+        return expr1.interpret(context) || expr2.interpret(context);
+    }
+}
+
+public class InterpreterDemo {
+    public static void main(String[] args) {
+        Expression isJava = new TerminalExpression("Java");
+        Expression isSpring = new TerminalExpression("Spring");
+        Expression isJavaOrSpring = new OrExpression(isJava, isSpring);
+
+        System.out.println("Contains Java or Spring? " + isJavaOrSpring.interpret("Learning Spring Boot"));
+    }
+}`,
+                        compileInstructions: "javac -d out src/behavioral/interpreter/InterpreterDemo.java\njava -cp out behavioral.interpreter.InterpreterDemo",
+                        codeFlow: "1. Client constructs expression tree using Terminal and NonTerminal expressions.\n2. interpret() called recursively down the AST context.",
+                        comparison: "Without Interpreter, hardcoded conditional parsers get messy. With Interpreter, grammar rules map cleanly to object structures.",
+                        questions: [
+                            {
+                                id: "int-q1",
+                                level: "Hard",
+                                question: "Why is the Interpreter pattern rarely used for complex grammars in modern enterprise applications?",
+                                answer: {
+                                    code: `// For complex grammars, classes explode and performance degrades compared to parser generators (ANTLR, JavaCC).`,
+                                    explanation: "Interpreter creates a class for every grammar rule. For complex languages, this leads to class explosion and stack overflow risks during deep AST evaluation.",
+                                    relationships: "Grammar rule count -> Class explosion.",
+                                    flow: "Recursive AST evaluation.",
+                                    output: "Evaluated expression result.",
+                                    why: "Reserved for very simple, stable domain-specific languages (DSLs).",
+                                    alternatives: "ANTLR parser generator or ANTLR-based compilers."
+                                }
+                            }
+                        ],
+                        interview: {
+                            fqs: ["When should you use ANTLR instead of the Interpreter pattern?"],
+                            scenarios: ["Building a custom SQL WHERE-clause parser for a database query builder."],
+                            misconceptions: ["Assuming Interpreter is suitable for general-purpose programming languages."],
+                            pros: ["Easy to implement simple grammars and change rules"],
+                            cons: ["Complex grammars lead to class explosion and maintenance nightmares."]
+                        },
+                        mistakes: ["Attempting to parse complex languages with deeply nested grammars using manual interpreters."]
+                    }
+                ]
+            },
+            {
+                category: "Enterprise & Resilience Patterns",
+                icon: "fa-building",
+                items: [
+                    {
+                        id: "enterprise-overview",
+                        title: "Enterprise & Resilience Patterns",
+                        type: "guide",
+                        badge: "Enterprise",
+                        content: `
+                            <h2 class="text-3xl font-extrabold tracking-tight mb-4">Enterprise Architecture & Resilience Patterns</h2>
+                            <p class="text-slate-600 dark:text-slate-300 text-lg mb-6">While GoF patterns focus on object-level design, Enterprise and Resilience patterns address system-wide architecture, database persistence, and microservice fault tolerance in Spring Boot.</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <h3 class="font-bold text-lg text-indigo-600 dark:text-indigo-400 mb-2">Data & Service Layer Patterns</h3>
+                                    <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                                        <li><strong>Dependency Injection (DI):</strong> IoC containers wiring dependencies automatically.</li>
+                                        <li><strong>Repository & Unit of Work:</strong> Encapsulating data access and transactional consistency.</li>
+                                        <li><strong>DTO (Data Transfer Object):</strong> Decoupling domain models from API transport contracts.</li>
+                                        <li><strong>Service Layer:</strong> Encapsulating business transaction boundaries.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <h3 class="font-bold text-lg text-indigo-600 dark:text-indigo-400 mb-2">Microservice Resilience Patterns</h3>
+                                    <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                                        <li><strong>Circuit Breaker (Resilience4j):</strong> Failing fast when downstream services crash.</li>
+                                        <li><strong>Retry & Bulkhead:</strong> Handling transient network glitches and isolating thread pools.</li>
+                                        <li><strong>Outbox & Saga Pattern:</strong> Managing distributed transactions and eventual consistency.</li>
+                                        <li><strong>CQRS:</strong> Separating read models from write models for high scalability.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `
+                    }
+                ]
+            },
+            {
+                category: "Design Pattern Combinations",
+                icon: "fa-puzzle-piece",
+                items: [
+                    {
+                        id: "combos",
+                        title: "Pattern Combinations & LLD",
+                        type: "guide",
+                        badge: "Combinations",
+                        content: `
+                            <h2 class="text-3xl font-extrabold tracking-tight mb-4">Design Pattern Combinations & LLD Exercises</h2>
+                            <p class="text-slate-600 dark:text-slate-300 text-lg mb-6">Real-world low-level design (LLD) problems rarely use a single design pattern in isolation. Enterprise architectures combine patterns to solve complex enterprise problems.</p>
+
+                            <div class="space-y-4 mb-8">
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <h3 class="font-bold text-lg text-indigo-600 dark:text-indigo-400 mb-1">Strategy + Factory Combination</h3>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">A Factory instantiates the appropriate Strategy implementation based on incoming runtime configuration or HTTP headers (e.g., payment gateways: PayPal vs Stripe strategy).</p>
+                                    <pre class="bg-slate-900 text-slate-100 p-3 rounded-xl text-xs font-mono">PaymentStrategy strategy = PaymentFactory.getStrategy(paymentType);\nstrategy.processPayment(100.0);</pre>
+                                </div>
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <h3 class="font-bold text-lg text-indigo-600 dark:text-indigo-400 mb-1">Observer + Mediator Combination</h3>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300">A Mediator coordinates events between colleagues, using an Observer-style event bus to broadcast messages across decoupled microservices or UI components.</p>
+                                </div>
+                            </div>
+                        `
+                    }
+                ]
+            },
+            {
+                category: "Interview Question Bank",
+                icon: "fa-circle-question",
+                items: [
+                    {
+                        id: "interview-bank",
+                        title: "Comprehensive Interview Bank",
+                        type: "guide",
+                        badge: "Interview",
+                        content: `
+                            <h2 class="text-3xl font-extrabold tracking-tight mb-4">Java Design Patterns Interview Bank</h2>
+                            <p class="text-slate-600 dark:text-slate-300 text-lg mb-6">Curated questions frequently asked in senior Java and LLD interviews for 8+ years experienced engineers.</p>
+
+                            <div class="space-y-6">
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <span class="px-2.5 py-1 text-xs font-semibold bg-red-100 text-red-700 rounded-full">Hard</span>
+                                    <h3 class="font-bold text-lg mt-2 mb-2">1. Design a thread-safe connection pool manager using Singleton and Factory patterns.</h3>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">Discuss how you handle max connections, thread blocking when pool is exhausted, and graceful shutdown.</p>
+                                    <button onclick="toggleAnswer('bank-q1')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition">Show Answer</button>
+                                    <div id="bank-q1" class="hidden mt-4 p-4 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-mono">
+                                        <p class="text-slate-800 dark:text-slate-200 font-sans mb-2"><strong>Solution Architecture:</strong> Combine Double-Checked Locking Singleton with a BlockingQueue holding pre-initialized Connection objects. When connections are borrowed, threads wait on queue poll with timeout.</p>
+                                        <pre>BlockingQueue&lt;Connection&gt; pool = new ArrayBlockingQueue&lt;&gt;(10);</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        `
+                    }
+                ]
+            }
+        ];
+
+        // State Management
+        let completedItems = JSON.parse(localStorage.getItem('java_dp_completed') || '[]');
+        let currentSectionId = 'setup';
+
+        // Initialize Handbook UI
+        function initHandbook() {
+            renderSidebar();
+            loadSection(currentSectionId);
+            updateProgress();
+            setupSearch();
+            setupTheme();
+        }
+
+        function renderSidebar() {
+            const navContainer = document.getElementById('navLinks');
+            navContainer.innerHTML = '';
+
+            let totalItems = 0;
+            let completedCount = 0;
+
+            handbookData.forEach(cat => {
+                const catHeader = document.createElement('div');
+                catHeader.className = 'px-3 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider mt-4 flex items-center gap-2';
+                catHeader.innerHTML = `<i class="fa-solid ${cat.icon}"></i> ${cat.category}`;
+                navContainer.appendChild(catHeader);
+
+                cat.items.forEach(item => {
+                    totalItems++;
+                    const isCompleted = completedItems.includes(item.id);
+                    if (isCompleted) completedCount++;
+
+                    const btn = document.createElement('button');
+                    btn.className = `w-full text-left px-3 py-2.5 rounded-xl transition flex items-center justify-between group ${currentSectionId === item.id ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`;
+                    
+                    btn.innerHTML = `
+                        <div class="flex items-center gap-2.5 truncate">
+                            <input type="checkbox" ${isCompleted ? 'checked' : ''} onclick="event.stopPropagation(); toggleComplete('${item.id}')" class="rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                            <span class="truncate text-xs">${item.title}</span>
+                        </div>
+                        ${item.badge ? `<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 flex-shrink-0">${item.badge}</span>` : ''}
+                    `;
+
+                    btn.onclick = () => {
+                        loadSection(item.id);
+                        if (window.innerWidth < 1024) {
+                            document.getElementById('sidebar').classList.add('-translate-x-full');
+                        }
+                    };
+
+                    navContainer.appendChild(btn);
+                });
+            });
+        }
+
+        function loadSection(id) {
+            currentSectionId = id;
+            let targetItem = null;
+
+            handbookData.forEach(cat => {
+                cat.items.forEach(item => {
+                    if (item.id === id) targetItem = item;
+                });
+            });
+
+            if (!targetItem) return;
+
+            const contentArea = document.getElementById('contentArea');
+            document.getElementById('mobileTitle').innerText = targetItem.title;
+
+            if (targetItem.type === 'guide') {
+                contentArea.innerHTML = targetItem.content + getNavigationFooter(id);
+            } else {
+                // Pattern Lesson Strict Structure
+                contentArea.innerHTML = `
+                    <div class="max-w-4xl mx-auto space-y-8 pb-16">
+                        <!-- Header Badge & Title -->
+                        <div class="border-b border-slate-200 dark:border-slate-800 pb-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">${targetItem.badge}</span>
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">${targetItem.difficulty}</span>
+                            </div>
+                            <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight">${targetItem.title}</h1>
+                        </div>
+
+                        <!-- A. Problem Statement -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> A. Problem Statement</h3>
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">${targetItem.problem}</p>
+                        </div>
+
+                        <!-- B. Understand the Problem -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-lightbulb"></i> B. Understand the Problem</h3>
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">${targetItem.understand}</p>
+                        </div>
+
+                        <!-- C. Introduce the Pattern -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-book-bookmark"></i> C. Introduce the Pattern: ${targetItem.introduce.name}</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
+                                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                    <strong>Category:</strong> ${targetItem.introduce.category}
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                    <strong>Intent:</strong> ${targetItem.introduce.intent}
+                                </div>
+                            </div>
+                            <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                                <li><strong>When to use:</strong> ${targetItem.introduce.whenToUse}</li>
+                                <li><strong>When NOT to use:</strong> ${targetItem.introduce.whenNotToUse}</li>
+                                <li><strong>Real-world examples:</strong> ${targetItem.introduce.realWorld}</li>
+                            </ul>
+                        </div>
+
+                        <!-- D. UML / Class Relationship -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-2"><img src="https://placehold.co/24x24/6366f1/ffffff?text=U" class="rounded"> D. UML & Class Relationship Explanation</h3>
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">${targetItem.uml}</p>
+                        </div>
+
+                        <!-- E. Complete Executable Java Code -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-2"><i class="fa-solid fa-code"></i> E. Complete Executable Java Code</h3>
+                                <button onclick="copyCode(this)" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-copy"></i> Copy Code
+                                </button>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-3">Compile & run via terminal instructions:</p>
+                            <pre class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono mb-4 overflow-x-auto">${targetItem.compileInstructions}</pre>
+                            <div class="relative">
+                                <pre class="bg-slate-950 text-slate-100 p-4 rounded-xl text-xs font-mono overflow-x-auto custom-scrollbar"><code>${escapeHtml(targetItem.code)}</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- F. Code Flow -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-route"></i> F. Understand the Code Flow</h3>
+                            <pre class="whitespace-pre-line text-sm text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">${targetItem.codeFlow}</pre>
+                        </div>
+
+                        <!-- G. Before and After Comparison -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-scale-balanced"></i> G. Before and After Comparison</h3>
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">${targetItem.comparison}</p>
+                        </div>
+
+                        <!-- H. Practice Questions -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-4 flex items-center gap-2"><i class="fa-solid fa-dumbbell"></i> H. Practice Questions</h3>
+                            <div class="space-y-6">
+                                ${targetItem.questions.map((q, idx) => `
+                                    <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">${q.level}</span>
+                                        </div>
+                                        <p class="font-medium text-sm text-slate-800 dark:text-slate-200 mb-3">Q${idx + 1}: ${q.question}</p>
+                                        <button onclick="toggleAnswer('${q.id}')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition">Show Answer</button>
+                                        <div id="${q.id}" class="hidden mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 space-y-3">
+                                            <pre class="bg-slate-900 text-slate-100 p-3 rounded-lg text-xs font-mono overflow-x-auto"><code>${escapeHtml(q.answer.code)}</code></pre>
+                                            <p class="text-xs text-slate-600 dark:text-slate-300"><strong>Explanation:</strong> ${q.answer.explanation}</p>
+                                            <p class="text-xs text-slate-600 dark:text-slate-300"><strong>Class Relationships:</strong> ${q.answer.relationships}</p>
+                                            <p class="text-xs text-slate-600 dark:text-slate-300"><strong>Why Appropriate:</strong> ${q.answer.why}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- J. Interview Preparation -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-graduation-cap"></i> J. Interview Preparation</h3>
+                            <div class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                                <div>
+                                    <strong class="text-slate-800 dark:text-slate-200">Frequently Asked Questions:</strong>
+                                    <ul class="list-disc pl-5 mt-1 space-y-1">
+                                        ${targetItem.interview.fqs.map(fq => `<li>${fq}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                <div>
+                                    <strong class="text-slate-800 dark:text-slate-200">Scenario-Based Questions:</strong>
+                                    <ul class="list-disc pl-5 mt-1 space-y-1">
+                                        ${targetItem.interview.scenarios.map(sc => `<li>${sc}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                <div>
+                                    <strong class="text-slate-800 dark:text-slate-200">Advantages & Disadvantages:</strong>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                        <div class="bg-emerald-50 dark:bg-emerald-950/30 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                                            <strong class="text-emerald-700 dark:text-emerald-400 text-xs uppercase">Pros</strong>
+                                            <ul class="list-disc pl-4 mt-1 text-xs space-y-1">${targetItem.interview.pros.map(p => `<li>${p}</li>`).join('')}</ul>
+                                        </div>
+                                        <div class="bg-red-50 dark:bg-red-950/30 p-3 rounded-xl border border-red-200 dark:border-red-800">
+                                            <strong class="text-red-700 dark:text-red-400 text-xs uppercase">Cons</strong>
+                                            <ul class="list-disc pl-4 mt-1 text-xs space-y-1">${targetItem.interview.cons.map(c => `<li>${c}</li>`).join('')}</ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- K. Common Mistakes -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> K. Common Mistakes & Overengineering</h3>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                                ${targetItem.mistakes.map(m => `<li>${m}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        ${getNavigationFooter(id)}
+                    </div>
+                `;
+            }
+
+            contentArea.scrollTop = 0;
+            renderSidebar();
+        }
+
+        function getNavigationFooter(currentId) {
+            let allItems = [];
+            handbookData.forEach(cat => allItems.push(...cat.items));
+            const currentIndex = allItems.findIndex(i => i.id === currentId);
+            
+            const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : null;
+            const nextItem = currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
+
+            return `
+                <div class="flex justify-between items-center pt-8 border-t border-slate-200 dark:border-slate-800 mt-12">
+                    ${prevItem ? `<button onclick="loadSection('${prevItem.id}')" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> ${prevItem.title}</button>` : '<div></div>'}
+                    ${nextItem ? `<button onclick="loadSection('${nextItem.id}')" class="px-4 py-2.5 bg-indigo-600 text-white hover:bg-indigo-700 rounded-xl text-xs font-semibold transition flex items-center gap-2">${nextItem.title} <i class="fa-solid fa-arrow-right"></i></button>` : '<div></div>'}
+                </div>
+            `;
+        }
+
+        function toggleComplete(id) {
+            if (completedItems.includes(id)) {
+                completedItems = completedItems.filter(i => i !== id);
+                showToast('Lesson marked incomplete');
+            } else {
+                completedItems.push(id);
+                showToast('Lesson completed! Keep it up 🚀');
+            }
+            localStorage.setItem('java_dp_completed', JSON.stringify(completedItems));
+            updateProgress();
+            renderSidebar();
+        }
+
+        function updateProgress() {
+            let totalItems = 0;
+            handbookData.forEach(cat => totalItems += cat.items.length);
+            const percentage = Math.round((completedItems.length / totalItems) * 100);
+            
+            document.getElementById('progressText').innerText = `${completedItems.length} / ${totalItems} completed`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        function toggleAnswer(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        function copyCode(btn) {
+            const pre = btn.parentElement.nextElementSibling.nextElementSibling.querySelector('code');
+            const range = document.createRange();
+            range.selectNode(pre);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            try {
+                document.execCommand('copy');
+                showToast('Code copied to clipboard successfully!');
+            } catch (err) {
+                showToast('Failed to copy code.');
+            }
+            window.getSelection().removeAllRanges();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.oninput = (e) => {
+                const query = e.target.value.toLowerCase();
+                if (!query) {
+                    renderSidebar();
+                    return;
+                }
+                const navContainer = document.getElementById('navLinks');
+                navContainer.innerHTML = '';
+                
+                handbookData.forEach(cat => {
+                    const matched = cat.items.filter(item => item.title.toLowerCase().includes(query));
+                    if (matched.length > 0) {
+                        const catHeader = document.createElement('div');
+                        catHeader.className = 'px-3 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider mt-4';
+                        catHeader.innerText = cat.category;
+                        navContainer.appendChild(catHeader);
+
+                        matched.forEach(item => {
+                            const btn = document.createElement('button');
+                            btn.className = 'w-full text-left px-3 py-2.5 rounded-xl transition text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold';
+                            btn.innerText = item.title;
+                            btn.onclick = () => loadSection(item.id);
+                            navContainer.appendChild(btn);
+                        });
+                    }
+                });
+            };
+        }
+
+        function setupTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark');
+            }
+
+            themeToggle.onclick = () => {
+                if (html.classList.contains('dark')) {
+                    html.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    html.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            };
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        document.getElementById('sidebarToggle').onclick = () => {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        };
+
+        window.onload = initHandbook;
+    </script>
+<script src="header.js"></script>
+</body>
+</html>

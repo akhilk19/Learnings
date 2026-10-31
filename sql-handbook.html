@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DBMS & SQL — Hands-on Learning Handbook</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--ink:#172033;--muted:#647089;--line:#dfe5ef;--accent:#315fce;--soft:#edf2ff;--code:#111827;--green:#16845b;--amber:#9a6500;--shadow:0 8px 24px rgba(25,40,70,.06)}
+[data-theme="dark"]{--bg:#101522;--panel:#192235;--ink:#e8edf7;--muted:#aab5c9;--line:#303d55;--accent:#91adff;--soft:#253454;--code:#0b1020;--green:#63d6a6;--amber:#ffd17b;--shadow:none}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input{font:inherit}.topbar{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 20px}.brand{font-weight:800;letter-spacing:.2px}.topbar .spacer{flex:1}.topbar button,.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 12px;border-radius:9px;cursor:pointer}.topbar button:hover,.btn:hover{border-color:var(--accent)}
+.layout{display:grid;grid-template-columns:285px minmax(0,1fr);max-width:1500px;margin:auto}.sidebar{height:calc(100vh - 58px);position:sticky;top:58px;overflow:auto;padding:18px 14px;border-right:1px solid var(--line);background:var(--panel)}.search{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);margin-bottom:12px}.navgroup{margin:16px 0}.navhead{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:800;margin:14px 8px 6px}.navlink{display:block;text-decoration:none;color:var(--muted);padding:7px 9px;border-radius:7px;font-size:13px}.navlink:hover,.navlink.active{background:var(--soft);color:var(--accent)}.progress-wrap{margin:14px 7px;padding:11px;border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--muted)}.progress{height:6px;background:var(--line);border-radius:9px;margin-top:8px;overflow:hidden}.progress>span{display:block;height:100%;width:0;background:var(--accent)}
+main{padding:34px clamp(18px,4vw,60px) 90px;min-width:0;max-width:1120px}.hero{padding:34px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,var(--panel),var(--soft));box-shadow:var(--shadow)}.eyebrow{color:var(--accent);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px}.hero h1{font-size:clamp(28px,4vw,43px);line-height:1.12;margin:10px 0}.hero p{max-width:780px;color:var(--muted)}.pill{display:inline-block;padding:4px 9px;border-radius:30px;background:var(--soft);color:var(--accent);font-size:12px;font-weight:700;margin:3px 4px 3px 0}
+section{scroll-margin-top:78px;margin:42px 0}.section-title{font-size:27px;line-height:1.25;margin:0 0 8px}.lead{color:var(--muted);margin-top:0}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin:15px 0;box-shadow:var(--shadow)}h3{margin:8px 0}h4{margin:15px 0 5px}.muted{color:var(--muted)}.note{border-left:4px solid var(--accent);background:var(--soft);padding:12px 15px;border-radius:0 9px 9px 0;margin:14px 0}.warn{border-left-color:#d49a28}.good{border-left-color:var(--green)}
+pre{background:var(--code);color:#e5e7eb;padding:15px 16px;border-radius:10px;overflow:auto;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;position:relative;margin:10px 0}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.copy{float:right;margin:7px 7px 0 0;position:relative;z-index:1;background:#26344d;color:#fff;border:0;border-radius:6px;padding:5px 9px;font-size:11px;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:9px 10px}th{background:var(--soft);font-weight:750}.table-wrap{overflow-x:auto}.step{display:grid;grid-template-columns:34px 1fr;gap:12px;margin:13px 0}.num{width:30px;height:30px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:800}
+.lesson{border:1px solid var(--line);border-radius:14px;margin:18px 0;background:var(--panel);overflow:hidden}.lesson-head{padding:17px 20px;background:var(--soft)}.lesson-head h3{margin:0}.lesson-body{padding:18px 20px}.coverage{font-size:12px;color:var(--green);font-weight:750}.question{border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow:hidden}.qhead{padding:12px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between}.qhead strong{font-size:14px}.answer-btn{white-space:nowrap;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:7px;padding:6px 10px;cursor:pointer;font-size:12px;font-weight:700}.answer{display:none;border-top:1px solid var(--line);padding:13px 14px;background:var(--bg)}.answer.open{display:block}.answer p{margin:6px 0}.tag{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px}.checklist label{display:block;margin:8px 0}.checklist input{margin-right:8px}.footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:13px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{height:auto;position:relative;top:0;border-right:0;border-bottom:1px solid var(--line);max-height:300px}.topbar{padding:10px 13px}main{padding:22px 15px 60px}.hero{padding:23px}.qhead{align-items:flex-start;flex-direction:column}.answer-btn{align-self:flex-start}}
+@media print{.topbar,.sidebar,.copy,.answer-btn{display:none!important}.layout{display:block}main{max-width:none;padding:0}.answer{display:block!important}.lesson,.card{break-inside:avoid;box-shadow:none}body{background:white;color:#111}}
+</style>
+</head>
+<body>
+<div id="shared-header"></div>
+<header class="topbar"><div class="brand">DBMS + SQL Handbook</div><span class="pill">MySQL 8.4</span><div class="spacer"></div><button id="themeBtn" aria-label="Toggle theme">☾ Theme</button><button onclick="window.print()">Print / Save PDF</button></header>
+<div class="layout">
+<aside class="sidebar">
+<input class="search" id="navSearch" placeholder="Search topics…" aria-label="Search topics">
+<div class="progress-wrap"><strong id="progressText">0 of 0 lessons completed</strong><div class="progress"><span id="progressBar"></span></div><small>Completion is saved in this browser.</small></div>
+<nav id="nav"></nav>
+</aside>
+<main>
+<div class="hero">
+<div class="eyebrow">A practical, progressive course</div>
+<h1>Learn DBMS and SQL by building and querying a real database</h1>
+<p>Start with Docker, connect to MySQL from your terminal, create two related tables, and learn SQL one operation at a time. Every lesson explains the concept, builds a query clause by clause, and gives you practice questions with revealable answers.</p>
+<div><span class="pill">Docker-first setup</span><span class="pill">MySQL 8.4</span><span class="pill">Employees + Departments</span><span class="pill">Practice with answers</span><span class="pill">Beginner → Advanced</span></div>
+</div>
+
+<section id="how-to-use">
+<h2 class="section-title">How to use this handbook</h2>
+<p class="lead">Do the steps in order. Type the SQL yourself in the MySQL terminal rather than only reading it.</p>
+<div class="card">
+<div class="step"><div class="num">1</div><div><b>Read the concept and example.</b><br><span class="muted">Understand the problem the SQL feature solves before memorising syntax.</span></div></div>
+<div class="step"><div class="num">2</div><div><b>Run the example in MySQL.</b><br><span class="muted">Compare your actual output with the expected output shown here.</span></div></div>
+<div class="step"><div class="num">3</div><div><b>Attempt every practice question first.</b><br><span class="muted">Use Show answer only after you have made an attempt.</span></div></div>
+<div class="step"><div class="num">4</div><div><b>Tick the lesson complete.</b><br><span class="muted">Progress is stored locally in this browser.</span></div></div>
+<div class="note warn"><b>Important:</b> The handbook displays SQL and expected results; it does not execute queries inside the browser. Execute them in your MySQL 8.4 container to verify actual results.</div>
+</div>
+</section>
+
+<section id="docker">
+<h2 class="section-title">Part 1 — Set up Docker and MySQL</h2>
+<p class="lead">Environment: macOS + Docker Desktop + MySQL 8.4. You only need to do this setup once.</p>
+<div class="card">
+<h3>1. Verify Docker Desktop</h3>
+<p>Install and open Docker Desktop for Mac. Wait until Docker reports that its engine is running. Then open Terminal:</p>
+<pre><button class="copy">Copy</button><code>docker --version
+docker compose version
+docker info</code></pre>
+<p><b>What these commands mean:</b> <code>docker --version</code> checks the CLI; <code>docker compose version</code> checks Compose; <code>docker info</code> confirms the daemon is reachable.</p>
+<h3>2. Create a project folder</h3>
+<pre><button class="copy">Copy</button><code>mkdir -p ~/sql-learning
+cd ~/sql-learning</code></pre>
+<h3>3. Create a Docker Compose file</h3>
+<p>Create a file named <code>compose.yaml</code> in that folder:</p>
+<pre><button class="copy">Copy</button><code>services:
+  mysql:
+    image: mysql:8.4
+    container_name: sql-learning-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: LocalRootPass_ChangeMe
+      MYSQL_DATABASE: employee_management
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_learning_data:/var/lib/mysql
+
+volumes:
+  mysql_learning_data:</code></pre>
+<p>For local learning, this password is a placeholder. Do not reuse it for a real system or commit real credentials to source control.</p>
+<h3>4. Start MySQL</h3>
+<pre><button class="copy">Copy</button><code>docker compose up -d
+docker ps
+docker logs -f sql-learning-mysql</code></pre>
+<p>Wait until the logs indicate that MySQL is ready for connections. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to stop following logs; this does not stop the container.</p>
+<h3>5. Connect through the terminal</h3>
+<pre><button class="copy">Copy</button><code>docker exec -it sql-learning-mysql mysql -uroot -p</code></pre>
+<p>Enter the root password from <code>compose.yaml</code>. You should see the <code>mysql&gt;</code> prompt.</p>
+<h3>6. Select the learning database and inspect it</h3>
+<pre><button class="copy">Copy</button><code>SHOW DATABASES;
+USE employee_management;
+SELECT DATABASE();
+SHOW TABLES;
+EXIT;</code></pre>
+<p><code>USE</code> selects the default database for subsequent statements in that MySQL session. <code>EXIT</code> leaves the MySQL client, not the Docker container.</p>
+<h3>Useful Docker commands</h3>
+<table><thead><tr><th>Command</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>docker ps</code></td><td>List running containers</td></tr><tr><td><code>docker stop sql-learning-mysql</code></td><td>Stop the container</td></tr><tr><td><code>docker start sql-learning-mysql</code></td><td>Start the existing container</td></tr><tr><td><code>docker compose down</code></td><td>Remove the container/network; keep named volume data</td></tr><tr><td><code>docker compose down -v</code></td><td>Also deletes the named volume and database data — destructive</td></tr><tr><td><code>docker exec -it sql-learning-mysql bash</code></td><td>Open a shell inside the container</td></tr></tbody></table>
+<div class="note"><b>Docker mental model:</b> an image is the packaged template; a container is a running instance; port mapping exposes MySQL on your Mac; the named volume keeps database files when the container is replaced.</div>
+</div>
+</section>
+
+<section id="schema">
+<h2 class="section-title">Part 2 — Create our two-table database</h2>
+<p class="lead">We will use the same small dataset throughout the course so that each new SQL concept builds on familiar data.</p>
+<div class="card">
+<h3>1. Understand the relationship</h3>
+<p>A department can have many employees. Each employee belongs to one department in this simplified model.</p>
+<div class="table-wrap"><table><thead><tr><th>departments</th><th></th><th>employees</th></tr></thead><tbody><tr><td><code>department_id</code> — primary key</td><td>1 ───── many</td><td><code>department_id</code> — foreign key</td></tr><tr><td><code>department_name</code></td><td></td><td><code>employee_id</code> — primary key</td></tr><tr><td></td><td></td><td><code>name</code>, <code>salary</code></td></tr></tbody></table></div>
+<p><b>Primary key:</b> uniquely identifies a row. <b>Foreign key:</b> enforces that a referenced department exists. This is referential integrity.</p>
+<h3>2. Create the tables</h3>
+<pre><button class="copy">Copy</button><code>USE employee_management;
+
+CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    name VARCHAR(80) NOT NULL,
+    salary DECIMAL(10, 2) NOT NULL,
+    department_id INT,
+    CONSTRAINT fk_employee_department
+        FOREIGN KEY (department_id)
+        REFERENCES departments(department_id)
+);</code></pre>
+<h3>3. Insert departments first</h3>
+<pre><button class="copy">Copy</button><code>INSERT INTO departments (department_id, department_name) VALUES
+(1, 'Engineering'),
+(2, 'HR'),
+(3, 'Finance'),
+(4, 'Marketing');</code></pre>
+<h3>4. Insert employees</h3>
+<pre><button class="copy">Copy</button><code>INSERT INTO employees (employee_id, name, salary, department_id) VALUES
+(101, 'Rahul', 75000, 1),
+(102, 'Priya', 65000, 2),
+(103, 'Kiran', 85000, 1),
+(104, 'Sneha', 55000, 3),
+(105, 'Arjun', 90000, 3),
+(106, 'Divya', 60000, 4),
+(107, 'Ravi', 72000, 1),
+(108, 'Meera', 68000, 2);</code></pre>
+<h3>5. Verify the data</h3>
+<pre><button class="copy">Copy</button><code>SELECT * FROM departments;
+SELECT * FROM employees;
+DESCRIBE employees;
+SHOW CREATE TABLE employees;</code></pre>
+<h3>Reference data</h3>
+<div class="table-wrap"><table><thead><tr><th>department_id</th><th>department_name</th></tr></thead><tbody><tr><td>1</td><td>Engineering</td></tr><tr><td>2</td><td>HR</td></tr><tr><td>3</td><td>Finance</td></tr><tr><td>4</td><td>Marketing</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>employee_id</th><th>name</th><th>salary</th><th>department_id</th></tr></thead><tbody>
+<tr><td>101</td><td>Rahul</td><td>75000</td><td>1</td></tr><tr><td>102</td><td>Priya</td><td>65000</td><td>2</td></tr><tr><td>103</td><td>Kiran</td><td>85000</td><td>1</td></tr><tr><td>104</td><td>Sneha</td><td>55000</td><td>3</td></tr><tr><td>105</td><td>Arjun</td><td>90000</td><td>3</td></tr><tr><td>106</td><td>Divya</td><td>60000</td><td>4</td></tr><tr><td>107</td><td>Ravi</td><td>72000</td><td>1</td></tr><tr><td>108</td><td>Meera</td><td>68000</td><td>2</td></tr>
+</tbody></table></div>
+<div class="note warn"><b>Experiment carefully:</b> Try inserting an employee with a department_id of 99. MySQL rejects it because no matching department exists. Do not disable foreign-key checks just to make the insert succeed.</div>
+</div>
+</section>
+
+<div id="lessons"></div>
+
+<section id="dbms-concepts">
+<h2 class="section-title">Part 4 — DBMS concepts and internals</h2>
+<p class="lead">These ideas explain what the database is doing beyond the SQL syntax.</p>
+<div class="card">
+<h3>Relational modelling and normalization</h3>
+<ul><li><b>1NF:</b> each column stores an atomic value; avoid repeating groups.</li><li><b>2NF:</b> be in 1NF and remove partial dependency on part of a composite candidate key.</li><li><b>3NF:</b> be in 2NF and remove transitive dependency of non-key attributes on candidate keys.</li><li><b>Denormalization:</b> deliberately duplicate or precompute data for read performance, accepting consistency costs.</li></ul>
+<h3>Transactions and ACID</h3>
+<ul><li><b>Atomicity:</b> all-or-nothing transaction outcome.</li><li><b>Consistency:</b> constraints and rules remain satisfied.</li><li><b>Isolation:</b> concurrent transactions are controlled according to the isolation level.</li><li><b>Durability:</b> committed changes survive failures within the database's guarantees.</li></ul>
+<h3>Indexes and query execution</h3>
+<p>Indexes can reduce the amount of data scanned, but consume storage and add write overhead. MySQL commonly uses B-tree indexes for ordinary InnoDB indexes. Use <code>EXPLAIN</code> to inspect the optimizer's plan; do not assume an index will always be selected.</p>
+<h3>Concurrency and isolation</h3>
+<p>Know dirty reads, non-repeatable reads, phantom reads, lost updates, locks, deadlocks, and the MySQL isolation levels. A transaction's actual behaviour depends on the isolation level and engine.</p>
+<h3>Database architecture and modern systems</h3>
+<ul><li>Client/server architecture, connection pooling, buffer pool, redo/undo logs, binary logs.</li><li>Replication, backups, point-in-time recovery, failover, partitioning and sharding.</li><li>OLTP vs OLAP, row stores vs column stores, data warehouses.</li><li>Relational vs document, key-value, graph and wide-column NoSQL databases.</li><li>CAP theorem as a distributed-systems trade-off under network partition; consistency models and eventual consistency.</li></ul>
+</div>
+</section>
+
+<section id="final-checklist">
+<h2 class="section-title">Final learning checklist</h2>
+<div class="card checklist">
+<label><input type="checkbox"> I can start, stop and inspect the MySQL Docker container.</label>
+<label><input type="checkbox"> I can connect using the MySQL CLI and select a database.</label>
+<label><input type="checkbox"> I understand the two-table schema, primary key and foreign key.</label>
+<label><input type="checkbox"> I can write SELECT, WHERE, ORDER BY and pagination queries.</label>
+<label><input type="checkbox"> I can safely INSERT, UPDATE and DELETE records.</label>
+<label><input type="checkbox"> I understand COUNT, SUM, AVG, MAX and MIN individually and together.</label>
+<label><input type="checkbox"> I can use GROUP BY and HAVING correctly.</label>
+<label><input type="checkbox"> I can choose the correct JOIN type and explain unmatched rows.</label>
+<label><input type="checkbox"> I can write subqueries, EXISTS queries and CTEs.</label>
+<label><input type="checkbox"> I understand constraints, transactions, indexes and query plans.</label>
+<label><input type="checkbox"> I can explain normalization, isolation and basic database internals.</label>
+</div>
+</section>
+<div class="footer">Learning note: examples target MySQL 8.4. SQL dialects differ; check the documentation when moving to PostgreSQL, SQL Server, Oracle or another database. Always practise destructive statements on disposable data first.</div>
+</main>
+</div>
+<script>
+const lessons = [
+{group:"SQL foundations",id:"select",title:"1. SELECT, FROM, aliases and expressions",concept:"SELECT chooses the columns or expressions to return; FROM identifies the source table. SQL is declarative: describe the result you want, not a sequence of row-by-row instructions.",syntax:"SELECT column_name, expression AS alias\nFROM table_name;",discussion:["SELECT * returns every column; useful for exploration, but explicit columns are usually clearer in application code.","A column alias names a result expression. In MySQL, AS is optional for aliases, but using it improves readability.","Expressions can calculate values, for example salary * 12. The database evaluates the expression for each row."],example:"SELECT name, salary, salary * 12 AS annual_salary\nFROM employees;",questions:[
+["Beginner","Return every column for every employee.","SELECT * FROM employees;","The star expands to all columns in the employees table."],
+["Beginner","Return only employee names and salaries.","SELECT name, salary FROM employees;","Only the two requested columns are returned."],
+["Beginner","Show employee name and annual salary, with the calculated column named annual_salary.","SELECT name, salary * 12 AS annual_salary\nFROM employees;","The expression is evaluated for each row; AS gives the output column a readable name."],
+["Intermediate","Show each employee's name and salary increased by 10%, as revised_salary.","SELECT name, salary * 1.10 AS revised_salary\nFROM employees;","Multiplication calculates the revised amount without changing stored salary."],
+["Intermediate","Show department names from the departments table.","SELECT department_name FROM departments;","The FROM clause points to departments."]
+]},
+{group:"SQL foundations",id:"distinct",title:"2. DISTINCT",concept:"DISTINCT removes duplicate result rows. It applies to the complete selected column combination, not independently to each selected column.",syntax:"SELECT DISTINCT column_name\nFROM table_name;",discussion:["DISTINCT is useful for discovering categories or unique combinations.","With multiple columns, uniqueness is evaluated across the combination of those columns.","COUNT(DISTINCT column) counts unique non-NULL values."],example:"SELECT DISTINCT department_id\nFROM employees;",questions:[
+["Beginner","List each department_id represented in employees once.","SELECT DISTINCT department_id FROM employees;","There are four distinct department IDs in the sample."],
+["Intermediate","List unique department_id and salary combinations.","SELECT DISTINCT department_id, salary\nFROM employees;","A row is removed only when the whole selected pair is duplicated."],
+["Intermediate","Count the number of distinct departments represented by employees.","SELECT COUNT(DISTINCT department_id) AS department_count\nFROM employees;","COUNT(DISTINCT ...) counts unique, non-NULL department IDs."]
+]},
+{group:"Filtering and sorting",id:"where",title:"3. WHERE and comparison operators",concept:"WHERE filters individual rows before grouping or aggregation. It keeps only rows for which the condition evaluates to TRUE; FALSE and UNKNOWN (for example, comparisons with NULL) are not kept.",syntax:"SELECT columns\nFROM table_name\nWHERE condition;",discussion:["Comparison operators: =, <>, !=, >, >=, <, <=. <> is the standard SQL not-equal operator.","AND requires both conditions; OR requires at least one; NOT negates a condition. Use parentheses when mixing AND and OR.","Text values use single quotes. Numeric values normally do not.","WHERE is evaluated before GROUP BY and aggregate calculations."],example:"SELECT *\nFROM employees\nWHERE salary > 70000;",questions:[
+["Beginner","Find employees earning more than 70000.","SELECT * FROM employees WHERE salary > 70000;","Rahul, Kiran, Arjun and Ravi match."],
+["Beginner","Find employees earning less than 70000.","SELECT * FROM employees WHERE salary < 70000;","Priya, Sneha, Divya and Meera match."],
+["Beginner","Find employees in department 1.","SELECT * FROM employees WHERE department_id = 1;","This returns Engineering employees in the sample."],
+["Intermediate","Find employees whose salary is at least 65000 and below 80000.","SELECT * FROM employees\nWHERE salary >= 65000 AND salary < 80000;","Both conditions must be true."],
+["Intermediate","Find employees in department 1 or department 3.","SELECT * FROM employees\nWHERE department_id = 1 OR department_id = 3;","OR allows either department condition to match."],
+["Intermediate","Find employees not in department 1.","SELECT * FROM employees WHERE NOT department_id = 1;","NOT negates the equality condition."]
+]},
+{group:"Filtering and sorting",id:"predicates",title:"4. IN, BETWEEN, LIKE and NULL",concept:"These predicates make common filters concise. NULL means missing or unknown, so it must be tested with IS NULL or IS NOT NULL rather than = NULL.",syntax:"WHERE value IN (...)\nWHERE value BETWEEN low AND high\nWHERE text LIKE 'pattern'\nWHERE column IS NULL",discussion:["IN is shorthand for several equality alternatives. NOT IN needs care if the list contains NULL.","BETWEEN includes both endpoints. For numeric salary 60000 to 80000, both 60000 and 80000 qualify.","LIKE uses % for any sequence and _ for one character. Case sensitivity depends on collation.","Use IS NULL / IS NOT NULL. Comparisons such as department_id = NULL do not work as intended."],example:"SELECT *\nFROM employees\nWHERE salary BETWEEN 60000 AND 80000\n  AND department_id IN (1, 2);",questions:[
+["Beginner","Find employees in departments 1, 2 or 4 using IN.","SELECT * FROM employees\nWHERE department_id IN (1, 2, 4);","IN tests membership in the listed values."],
+["Beginner","Find employees with salary between 60000 and 80000 inclusive.","SELECT * FROM employees\nWHERE salary BETWEEN 60000 AND 80000;","BETWEEN includes both boundaries."],
+["Beginner","Find employees whose name starts with M.","SELECT * FROM employees WHERE name LIKE 'M%';","% matches zero or more characters after M."],
+["Intermediate","Find employees whose name contains 'a'.","SELECT * FROM employees WHERE name LIKE '%a%';","The wildcard on both sides allows characters before and after a."],
+["Intermediate","Find employees whose name has exactly five characters.","SELECT * FROM employees WHERE name LIKE '_____';","Each underscore represents exactly one character."],
+["Advanced","Find employees whose department_id is not NULL.","SELECT * FROM employees WHERE department_id IS NOT NULL;","IS NOT NULL is the correct null test. The sample currently assigns every employee a department."]
+]},
+{group:"Filtering and sorting",id:"order-limit",title:"5. ORDER BY, LIMIT and OFFSET",concept:"ORDER BY sorts the result. LIMIT restricts the number of rows returned; OFFSET skips rows before returning the requested page.",syntax:"SELECT columns\nFROM table_name\nORDER BY column [ASC|DESC]\nLIMIT count OFFSET skip;",discussion:["ASC is ascending and is the default; DESC is descending.","Multiple sort keys are applied left to right. Later keys break ties in earlier keys.","Pagination needs a deterministic ORDER BY, ideally including a unique key as a tie-breaker.","Large OFFSET values can become expensive because the database still has to find and skip earlier rows."],example:"SELECT * FROM employees\nORDER BY salary DESC, employee_id ASC\nLIMIT 3;",questions:[
+["Beginner","List employees from highest salary to lowest.","SELECT * FROM employees ORDER BY salary DESC;","DESC sorts salary from largest to smallest."],
+["Beginner","Return the three lowest-paid employees.","SELECT * FROM employees ORDER BY salary ASC LIMIT 3;","ORDER BY sorts first; LIMIT returns the first three rows."],
+["Intermediate","Return the second page of three employees ordered by employee_id.","SELECT * FROM employees ORDER BY employee_id LIMIT 3 OFFSET 3;","The first three rows are skipped, then the next three are returned."],
+["Intermediate","Sort by department_id ascending and salary descending within each department.","SELECT * FROM employees\nORDER BY department_id ASC, salary DESC;","The second key sorts rows within each department group."],
+["Advanced","Find the highest-paid employee; handle salary ties by returning all tied employees.","SELECT * FROM employees\nWHERE salary = (SELECT MAX(salary) FROM employees);","A scalar subquery finds the maximum salary; the outer query returns every matching employee."]
+]},
+{group:"Data modification",id:"insert",title:"6. INSERT",concept:"INSERT adds new rows. Naming the target columns explicitly makes the statement safer when table definitions change.",syntax:"INSERT INTO table_name (column1, column2)\nVALUES (value1, value2);",discussion:["A single INSERT can add one row or multiple rows using comma-separated value tuples.","Omitted columns receive their DEFAULT value or NULL if allowed; otherwise the insert fails.","Foreign-key values must reference an existing parent row.","A duplicate primary or unique key causes an error unless a deliberate conflict-handling strategy is used."],example:"INSERT INTO employees (employee_id, name, salary, department_id)\nVALUES (109, 'Ananya', 78000, 1);",questions:[
+["Beginner","Insert employee 109, Ananya, salary 78000, department 1.","INSERT INTO employees (employee_id, name, salary, department_id)\nVALUES (109, 'Ananya', 78000, 1);","Adds one row. Run once; rerunning causes a duplicate primary-key error."],
+["Intermediate","Insert two employees in one statement: 110 Nikhil 64000 department 2 and 111 Tara 82000 department 1.","INSERT INTO employees (employee_id, name, salary, department_id)\nVALUES (110, 'Nikhil', 64000, 2),\n       (111, 'Tara', 82000, 1);","Multiple tuples share one INSERT statement."],
+["Intermediate","Try inserting employee 112 with department_id 99. What happens?","INSERT INTO employees (employee_id, name, salary, department_id)\nVALUES (112, 'Test User', 50000, 99);","This should fail because department 99 does not exist; the foreign key protects referential integrity. This is an intentional failure exercise."]
+]},
+{group:"Data modification",id:"update-delete",title:"7. UPDATE and DELETE",concept:"UPDATE changes existing rows; DELETE removes rows. A missing or incorrect WHERE clause can affect every row, so inspect the target set before running a destructive statement.",syntax:"UPDATE table_name\nSET column = value\nWHERE condition;\n\nDELETE FROM table_name\nWHERE condition;",discussion:["UPDATE can set multiple columns in one statement, separated by commas.","DELETE without WHERE removes all rows but leaves the table structure. It is not DROP TABLE and not the same operation as TRUNCATE.","TRUNCATE removes all rows using a DDL operation in MySQL; transactional and trigger behaviour differs from DELETE.","Use a transaction where appropriate, and first run the same WHERE condition in a SELECT to inspect affected rows."],example:"SELECT * FROM employees WHERE employee_id = 108;\nUPDATE employees\nSET salary = 70000\nWHERE employee_id = 108;",questions:[
+["Beginner","Increase Rahul's salary to 80000.","UPDATE employees SET salary = 80000 WHERE employee_id = 101;","The primary-key condition targets Rahul's row."],
+["Intermediate","Increase salaries by 5% for employees in department 2.","UPDATE employees SET salary = salary * 1.05 WHERE department_id = 2;","The expression uses each row's current salary."],
+["Intermediate","Change employee 106's name to Divya Rao and salary to 62000.","UPDATE employees\nSET name = 'Divya Rao', salary = 62000\nWHERE employee_id = 106;","Multiple assignments are separated by commas."],
+["Beginner","Delete employee 104.","DELETE FROM employees WHERE employee_id = 104;","Only the row matching employee_id 104 is removed."],
+["Advanced","What does DELETE FROM employees without WHERE do? Does it drop the table?","DELETE FROM employees;","It deletes every row but keeps the table definition. Do not execute this on your learning data unless you intend to clear it. It does not drop the table."],
+["Advanced","Show a safe workflow before deleting employees in department 4.","SELECT * FROM employees WHERE department_id = 4;\n-- After verifying the rows:\nDELETE FROM employees WHERE department_id = 4;","Inspect with SELECT first, then use the same predicate for DELETE. A transaction can provide additional protection."]
+]},
+{group:"Aggregation",id:"aggregates",title:"8. Aggregate functions — COUNT, SUM, AVG, MAX, MIN",concept:"Aggregate functions calculate one value from a set of rows. They are used for totals, counts, averages, extremes and reporting. Most aggregates ignore NULL values; COUNT(*) is the important exception.",syntax:"SELECT COUNT(*), SUM(number_column), AVG(number_column),\n       MAX(number_column), MIN(number_column)\nFROM table_name;",discussion:["COUNT(*) counts rows. COUNT(column) counts only rows where that column is not NULL. COUNT(DISTINCT column) counts distinct non-NULL values.","SUM adds non-NULL numeric values. AVG calculates the mean of non-NULL numeric values.","MAX and MIN return the highest and lowest non-NULL values. They return a value, not the full row containing it.","An aggregate without GROUP BY produces one result row for the selected aggregate expressions.","Use WHERE to filter input rows before aggregation. Use HAVING to filter groups after GROUP BY."],example:"SELECT\n  COUNT(*) AS employee_count,\n  SUM(salary) AS total_salary,\n  AVG(salary) AS average_salary,\n  MAX(salary) AS highest_salary,\n  MIN(salary) AS lowest_salary\nFROM employees;",questions:[
+["Beginner · COUNT","Count all employees.","SELECT COUNT(*) AS total_employees FROM employees;","Counts every row. With the original sample data, the result is 8."],
+["Beginner · COUNT","Count employees whose department_id is populated.","SELECT COUNT(department_id) AS assigned_department_count FROM employees;","COUNT(column) ignores NULL values. In the sample, all 8 have a department."],
+["Intermediate · COUNT","Count the distinct departments represented by employees.","SELECT COUNT(DISTINCT department_id) AS department_count FROM employees;","Counts unique non-NULL department IDs. The sample result is 4."],
+["Intermediate · COUNT","Count employees earning more than 70000.","SELECT COUNT(*) AS employee_count FROM employees WHERE salary > 70000;","WHERE filters rows before COUNT runs. The sample result is 4."],
+["Beginner · SUM","Calculate the total salary expenditure.","SELECT SUM(salary) AS total_salary FROM employees;","Adds all salary values. The sample total is 570000."],
+["Intermediate · SUM","Calculate total salary for Engineering (department 1).","SELECT SUM(salary) AS engineering_salary\nFROM employees WHERE department_id = 1;","WHERE selects Engineering employees before SUM. The sample result is 232000."],
+["Intermediate · SUM","Calculate salary expenditure for employees earning at least 70000.","SELECT SUM(salary) AS salary_total\nFROM employees WHERE salary >= 70000;","Only rows meeting the WHERE condition contribute to the sum."],
+["Beginner · AVG","Calculate the average salary across all employees.","SELECT AVG(salary) AS average_salary FROM employees;","The sample average is 71250."],
+["Intermediate · AVG","Find the average salary in department 2.","SELECT AVG(salary) AS average_salary\nFROM employees WHERE department_id = 2;","The average is calculated only from employees in department 2."],
+["Intermediate · AVG","Find the average salary of employees earning above 60000.","SELECT AVG(salary) AS average_salary\nFROM employees WHERE salary > 60000;","WHERE filters the input rows before AVG."],
+["Beginner · MAX","Find the highest salary.","SELECT MAX(salary) AS highest_salary FROM employees;","Returns 90000 in the original sample."],
+["Intermediate · MAX","Find the highest salary in department 1.","SELECT MAX(salary) AS highest_salary\nFROM employees WHERE department_id = 1;","The maximum is calculated only for department 1."],
+["Advanced · MAX","Return the full details of every employee tied for the highest salary.","SELECT * FROM employees\nWHERE salary = (SELECT MAX(salary) FROM employees);","MAX returns a scalar value. The outer query retrieves all rows matching it, including ties."],
+["Beginner · MIN","Find the lowest salary.","SELECT MIN(salary) AS lowest_salary FROM employees;","Returns 55000 in the original sample."],
+["Intermediate · MIN","Find the lowest salary in Finance (department 3).","SELECT MIN(salary) AS lowest_salary\nFROM employees WHERE department_id = 3;","The WHERE condition narrows the rows before MIN."],
+["Advanced · MIN","Return the full details of every employee tied for the lowest salary.","SELECT * FROM employees\nWHERE salary = (SELECT MIN(salary) FROM employees);","The outer query returns the row or rows having the minimum salary."],
+["Intermediate · Combined","Return count, total, average, highest and lowest salary in one result.","SELECT COUNT(*) AS employee_count,\n       SUM(salary) AS total_salary,\n       AVG(salary) AS average_salary,\n       MAX(salary) AS highest_salary,\n       MIN(salary) AS lowest_salary\nFROM employees;","Multiple aggregates can be selected in one query because they summarize the same input set."],
+["Advanced · NULL","Explain the difference between COUNT(*) and COUNT(department_id).","SELECT COUNT(*) AS all_rows,\n       COUNT(department_id) AS non_null_department_ids\nFROM employees;","If a department_id were NULL, COUNT(*) would still count that row while COUNT(department_id) would not."]
+]},
+{group:"Aggregation",id:"group-having",title:"9. GROUP BY and HAVING",concept:"GROUP BY partitions rows into groups that share the same grouping value. Aggregate functions then calculate a result for each group. HAVING filters the groups after aggregation.",syntax:"SELECT grouping_column, aggregate_function(...)\nFROM table_name\nWHERE row_condition\nGROUP BY grouping_column\nHAVING aggregate_condition\nORDER BY ...;",discussion:["Every selected non-aggregated column should be part of GROUP BY. MySQL's default ONLY_FULL_GROUP_BY mode helps catch ambiguous queries.","WHERE filters individual rows before grouping; HAVING filters completed groups.","GROUP BY can use more than one column. The combination defines each group.","A group with no matching input rows is not produced. An aggregate query without GROUP BY still returns one row."],example:"SELECT department_id, COUNT(*) AS employee_count,\n       AVG(salary) AS average_salary\nFROM employees\nGROUP BY department_id;",questions:[
+["Beginner","Count employees in each department.","SELECT department_id, COUNT(*) AS employee_count\nFROM employees GROUP BY department_id;","One output row is produced for each department_id present in employees."],
+["Beginner","Calculate average salary department-wise.","SELECT department_id, AVG(salary) AS average_salary\nFROM employees GROUP BY department_id;","AVG is calculated independently for each group."],
+["Intermediate","Calculate total salary department-wise, highest total first.","SELECT department_id, SUM(salary) AS total_salary\nFROM employees GROUP BY department_id\nORDER BY total_salary DESC;","GROUP BY forms the groups; ORDER BY sorts the aggregated result."],
+["Intermediate","Show only departments with more than one employee.","SELECT department_id, COUNT(*) AS employee_count\nFROM employees GROUP BY department_id\nHAVING COUNT(*) > 1;","HAVING filters groups using an aggregate result."],
+["Intermediate","Show departments whose average salary is above 70000.","SELECT department_id, AVG(salary) AS average_salary\nFROM employees GROUP BY department_id\nHAVING AVG(salary) > 70000;","The condition applies to each group's average."],
+["Advanced","Find departments with at least two employees and average salary above 70000.","SELECT department_id, COUNT(*) AS employee_count,\n       AVG(salary) AS average_salary\nFROM employees\nGROUP BY department_id\nHAVING COUNT(*) >= 2 AND AVG(salary) > 70000;","HAVING can contain multiple aggregate conditions joined by AND."],
+["Advanced","For employees earning above 60000, calculate count and average salary by department.","SELECT department_id, COUNT(*) AS employee_count,\n       AVG(salary) AS average_salary\nFROM employees\nWHERE salary > 60000\nGROUP BY department_id;","WHERE removes lower-paid employees first; GROUP BY and aggregates operate on the remaining rows."],
+["Advanced","Group by both department_id and salary and count employees in each combination.","SELECT department_id, salary, COUNT(*) AS employee_count\nFROM employees\nGROUP BY department_id, salary;","Both columns together define a group."]
+]},
+{group:"Joining tables",id:"joins",title:"10. JOINs — INNER, LEFT, RIGHT, CROSS and SELF",concept:"A JOIN combines rows from related tables. Our employee table stores department_id, while the department name is stored in departments. A join connects those facts.",syntax:"SELECT e.name, d.department_name\nFROM employees AS e\nJOIN departments AS d\n  ON e.department_id = d.department_id;",discussion:["INNER JOIN returns rows with matching values on both sides.","LEFT JOIN returns every left-side row and matching right-side data; unmatched right-side columns become NULL.","RIGHT JOIN preserves all rows from the right table. You can often rewrite it as a LEFT JOIN by swapping table order.","CROSS JOIN returns every possible pair (Cartesian product). Use it intentionally.","SELF JOIN joins a table to itself using aliases; useful for hierarchical relationships such as employee-manager. Our current schema has no manager_id, so the example is conceptual until that column is added.","A condition in ON controls matching. A WHERE condition on the nullable side of a LEFT JOIN can unintentionally remove unmatched rows."],example:"SELECT e.name, e.salary, d.department_name\nFROM employees e\nINNER JOIN departments d\n  ON e.department_id = d.department_id;",questions:[
+["Beginner · INNER","Show employee names with their department names.","SELECT e.name, d.department_name\nFROM employees e INNER JOIN departments d\nON e.department_id = d.department_id;","The matching department row supplies the department name."],
+["Intermediate · INNER","Show Engineering employees with salary and department name.","SELECT e.name, e.salary, d.department_name\nFROM employees e JOIN departments d\nON e.department_id = d.department_id\nWHERE d.department_name = 'Engineering';","JOIN connects the tables; WHERE filters the joined rows."],
+["Beginner · LEFT","List every department and any employees assigned to it, including departments with no employees.","SELECT d.department_name, e.name\nFROM departments d LEFT JOIN employees e\nON d.department_id = e.department_id;","Every department remains in the result. Employee columns are NULL when there is no match."],
+["Intermediate · LEFT","Find departments that currently have no employees.","SELECT d.department_id, d.department_name\nFROM departments d LEFT JOIN employees e\nON d.department_id = e.department_id\nWHERE e.employee_id IS NULL;","An unmatched LEFT JOIN row has NULL in the employee columns."],
+["Intermediate · RIGHT","Return every department row using RIGHT JOIN, with matching employee names where available.","SELECT d.department_name, e.name\nFROM employees e RIGHT JOIN departments d\nON e.department_id = d.department_id;","RIGHT JOIN preserves all rows from the right-hand table, departments."],
+["Intermediate · CROSS","Generate every possible employee-department pair.","SELECT e.name, d.department_name\nFROM employees e CROSS JOIN departments d;","With 8 employees and 4 departments this produces 32 combinations."],
+["Advanced · SELF","After adding manager_id to employees, show each employee with their manager's name.","ALTER TABLE employees ADD COLUMN manager_id INT NULL;\nALTER TABLE employees ADD CONSTRAINT fk_employee_manager\nFOREIGN KEY (manager_id) REFERENCES employees(employee_id);\n\nSELECT e.name AS employee_name, m.name AS manager_name\nFROM employees e LEFT JOIN employees m\nON e.manager_id = m.employee_id;","The same table appears twice with different aliases. This is a self join. The ALTER statements change the schema; run them only once."]
+]},
+{group:"Advanced querying",id:"subqueries",title:"11. Subqueries, IN, EXISTS and correlated queries",concept:"A subquery is a query nested inside another SQL statement. It can provide a single value, a list of values, or a row set to the outer query.",syntax:"SELECT ...\nFROM ...\nWHERE column operator (SELECT ...);",discussion:["A scalar subquery returns one value. If it returns multiple rows where one value is expected, MySQL raises an error.","IN compares a value with a set of values. EXISTS tests whether the subquery returns at least one row.","A correlated subquery refers to a row from the outer query and is logically evaluated in that outer-row context; the optimizer may transform it.","NOT IN can behave unexpectedly when the subquery result includes NULL. NOT EXISTS is often safer for anti-join logic."],example:"SELECT name, salary\nFROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees);",questions:[
+["Beginner · Scalar","Find employees earning above the overall average salary.","SELECT name, salary FROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees);","The inner query returns one average value; the outer query compares each salary to it."],
+["Intermediate · IN","Find employees who belong to a department whose name is Engineering or Finance.","SELECT * FROM employees\nWHERE department_id IN (\n  SELECT department_id FROM departments\n  WHERE department_name IN ('Engineering', 'Finance')\n);","The subquery returns department IDs; IN checks membership."],
+["Intermediate · EXISTS","Find departments that have at least one employee.","SELECT d.department_id, d.department_name\nFROM departments d\nWHERE EXISTS (\n  SELECT 1 FROM employees e\n  WHERE e.department_id = d.department_id\n);","EXISTS is true when the correlated subquery finds at least one matching employee."],
+["Advanced · NOT EXISTS","Find departments that have no employees.","SELECT d.department_id, d.department_name\nFROM departments d\nWHERE NOT EXISTS (\n  SELECT 1 FROM employees e\n  WHERE e.department_id = d.department_id\n);","NOT EXISTS returns parent rows for which no matching child row exists."],
+["Advanced · Correlated","Find employees whose salary is greater than the average salary of their own department.","SELECT e.name, e.salary, e.department_id\nFROM employees e\nWHERE e.salary > (\n  SELECT AVG(e2.salary) FROM employees e2\n  WHERE e2.department_id = e.department_id\n);","The inner query uses the outer employee's department_id, so the average is calculated per employee's department."]
+]},
+{group:"Advanced querying",id:"cte",title:"12. Common Table Expressions (CTEs)",concept:"A CTE names a query result for use by the statement that follows. It can make multi-step queries easier to read and maintain.",syntax:"WITH cte_name AS (\n  SELECT ...\n)\nSELECT ... FROM cte_name;",discussion:["A CTE exists for one statement; it is not a permanent table or view.","Multiple CTEs can be separated by commas and can refer to earlier CTEs in the same WITH clause.","Recursive CTEs use WITH RECURSIVE and are useful for hierarchies and sequences. They require an anchor member and recursive member."],example:"WITH department_pay AS (\n  SELECT department_id, AVG(salary) AS avg_salary\n  FROM employees GROUP BY department_id\n)\nSELECT * FROM department_pay\nWHERE avg_salary > 70000;",questions:[
+["Beginner","Use a CTE to calculate average salary by department, then display the results.","WITH department_pay AS (\n  SELECT department_id, AVG(salary) AS avg_salary\n  FROM employees GROUP BY department_id\n)\nSELECT * FROM department_pay;","The CTE gives the grouped query a name that the outer query can read."],
+["Intermediate","Use a CTE to find employees earning above the overall average.","WITH salary_stats AS (\n  SELECT AVG(salary) AS avg_salary FROM employees\n)\nSELECT e.name, e.salary\nFROM employees e CROSS JOIN salary_stats s\nWHERE e.salary > s.avg_salary;","The CTE calculates one value; the outer query compares each employee against it."],
+["Advanced · Multiple CTEs","Create one CTE for department counts and another for average salary; return departments with more than one employee.","WITH dept_counts AS (\n  SELECT department_id, COUNT(*) AS employee_count\n  FROM employees GROUP BY department_id\n), dept_averages AS (\n  SELECT department_id, AVG(salary) AS avg_salary\n  FROM employees GROUP BY department_id\n)\nSELECT c.department_id, c.employee_count, a.avg_salary\nFROM dept_counts c JOIN dept_averages a\nON c.department_id = a.department_id\nWHERE c.employee_count > 1;","The second CTE is joined to the first in the final query."],
+["Advanced · Recursive concept","Generate integers from 1 through 5 using a recursive CTE.","WITH RECURSIVE numbers AS (\n  SELECT 1 AS n\n  UNION ALL\n  SELECT n + 1 FROM numbers WHERE n < 5\n)\nSELECT n FROM numbers;","The anchor starts at 1; the recursive member adds 1 until n reaches 5."]
+]},
+{group:"Schema and integrity",id:"constraints",title:"13. Keys and constraints",concept:"Constraints enforce data rules in the database, not just in application code. They help keep data valid even when multiple applications write to the same database.",syntax:"PRIMARY KEY (...)\nFOREIGN KEY (...) REFERENCES parent(...)\nUNIQUE (...)\nNOT NULL\nCHECK (...)\nDEFAULT value",discussion:["PRIMARY KEY uniquely identifies each row and does not allow NULL.","FOREIGN KEY ensures referenced values exist in the parent key, subject to the configured referential actions.","UNIQUE prevents duplicate key values. NULL handling for UNIQUE is database-specific; MySQL permits multiple NULLs in a UNIQUE index.","NOT NULL requires a value. DEFAULT supplies a value when an insert omits the column.","CHECK enforces a Boolean condition when rows are inserted or updated; MySQL 8.4 enforces CHECK constraints."],example:"CREATE TABLE example_staff (\n  staff_id INT PRIMARY KEY,\n  email VARCHAR(150) UNIQUE NOT NULL,\n  salary DECIMAL(10,2) CHECK (salary >= 0),\n  status VARCHAR(20) DEFAULT 'ACTIVE'\n);",questions:[
+["Beginner","Inspect the primary and foreign key definitions on the learning tables.","SHOW CREATE TABLE employees;\nSHOW CREATE TABLE departments;","SHOW CREATE TABLE reveals the table definition, including constraints."],
+["Intermediate","Try inserting an employee with a duplicate employee_id. What should happen?","INSERT INTO employees (employee_id, name, salary, department_id)\nVALUES (101, 'Duplicate', 50000, 1);","MySQL rejects the duplicate primary key."],
+["Intermediate","Try inserting an employee referencing a nonexistent department. What should happen?","INSERT INTO employees (employee_id, name, salary, department_id)\nVALUES (120, 'Invalid Dept', 50000, 999);","The foreign key rejects the invalid reference."],
+["Advanced","Add a CHECK constraint that prevents negative salary values.","ALTER TABLE employees\nADD CONSTRAINT chk_employee_salary CHECK (salary >= 0);","The constraint is enforced by MySQL 8.4. If you run this lesson repeatedly, first inspect whether the constraint already exists."]
+]},
+{group:"Schema and integrity",id:"ddl",title:"14. DDL — CREATE, ALTER, DROP, TRUNCATE",concept:"DDL changes database objects and their structure. DML changes table data. In MySQL, many DDL statements cause implicit commits, so do not assume you can roll them back like ordinary DML.",syntax:"CREATE TABLE ...;\nALTER TABLE ...;\nTRUNCATE TABLE ...;\nDROP TABLE ...;",discussion:["CREATE creates a database object such as a database, table, view or index.","ALTER changes an existing object's structure: add, modify, rename or drop a column; add or drop constraints.","DROP removes the object itself, including its definition.","TRUNCATE removes all rows while keeping the table definition. It is not equivalent to DELETE in locking, logging, trigger and transaction behaviour.","ALTER does not update arbitrary existing row values; use UPDATE for data changes."],example:"ALTER TABLE employees\nADD COLUMN work_email VARCHAR(150) NULL;\n\n-- To remove that column later:\nALTER TABLE employees DROP COLUMN work_email;",questions:[
+["Beginner · CREATE","Create a small table named teams with team_id and team_name.","CREATE TABLE teams (\n  team_id INT PRIMARY KEY,\n  team_name VARCHAR(60) NOT NULL\n);","CREATE TABLE creates the table structure."],
+["Beginner · ALTER","Add a column called work_email to employees.","ALTER TABLE employees ADD COLUMN work_email VARCHAR(150) NULL;","ALTER TABLE changes the table schema."],
+["Intermediate · ALTER","Rename work_email to email_address in MySQL 8.4.","ALTER TABLE employees RENAME COLUMN work_email TO email_address;","This changes the column name, not the values stored in the column."],
+["Intermediate · ALTER","Change the salary column to DECIMAL(12,2).","ALTER TABLE employees MODIFY COLUMN salary DECIMAL(12,2) NOT NULL;","MODIFY changes the column definition. Check existing data and constraints before altering production tables."],
+["Beginner · DROP COLUMN","Remove the email_address column.","ALTER TABLE employees DROP COLUMN email_address;","The column and its stored values are removed."],
+["Advanced · TRUNCATE","What does TRUNCATE TABLE employees do?","TRUNCATE TABLE employees;","It removes all employee rows but retains the table definition. This is destructive; do not run it unless you intend to clear the practice table."],
+["Advanced · DROP","What is the difference between DROP TABLE employees and DELETE FROM employees?","-- DELETE FROM employees; removes rows.\n-- DROP TABLE employees; removes the table itself.","DROP removes the object definition; DELETE removes rows and leaves the table."]
+]},
+{group:"Database engineering",id:"transactions",title:"15. Transactions and ACID",concept:"A transaction groups related changes into one logical unit. It lets you commit all intended changes or roll them back if something fails.",syntax:"START TRANSACTION;\n-- DML statements\nCOMMIT; -- or ROLLBACK",discussion:["COMMIT makes the transaction's changes permanent; ROLLBACK undoes uncommitted transactional changes.","SAVEPOINT creates a point inside a transaction; ROLLBACK TO SAVEPOINT returns to it.","InnoDB is transactional. DDL often implicitly commits in MySQL, so do not mix schema changes into a transaction expecting rollback.","Isolation levels influence what concurrent transactions can observe."],example:"START TRANSACTION;\nUPDATE employees SET salary = salary + 1000\nWHERE employee_id = 101;\nSELECT * FROM employees WHERE employee_id = 101;\nROLLBACK;",questions:[
+["Beginner","Increase Rahul's salary by 1000 inside a transaction, inspect it, then undo the change.","START TRANSACTION;\nUPDATE employees SET salary = salary + 1000 WHERE employee_id = 101;\nSELECT * FROM employees WHERE employee_id = 101;\nROLLBACK;","ROLLBACK undoes the uncommitted update."],
+["Intermediate","Update an employee and make the change permanent.","START TRANSACTION;\nUPDATE employees SET salary = 80000 WHERE employee_id = 101;\nCOMMIT;","COMMIT ends the transaction and persists the update."],
+["Intermediate","Use a savepoint, make two changes, then undo only the second change.","START TRANSACTION;\nUPDATE employees SET salary = salary + 500 WHERE employee_id = 101;\nSAVEPOINT after_first_change;\nUPDATE employees SET salary = salary + 500 WHERE employee_id = 102;\nROLLBACK TO SAVEPOINT after_first_change;\nCOMMIT;","The first update remains and the second update is rolled back to the savepoint."],
+["Advanced","Explain why a DDL statement inside a transaction may not roll back in MySQL.","START TRANSACTION;\nALTER TABLE employees ADD COLUMN demo_flag INT NULL;\nROLLBACK;","Many MySQL DDL statements cause implicit commits. ROLLBACK should not be relied on to undo this schema change."]
+]},
+{group:"Database engineering",id:"indexes",title:"16. Indexes and EXPLAIN",concept:"An index is an additional data structure that helps the database locate rows efficiently. It can speed up reads but costs storage and can slow writes because the index must be maintained.",syntax:"CREATE INDEX index_name ON table_name (column_name);\nEXPLAIN SELECT ...;\nDROP INDEX index_name ON table_name;",discussion:["A primary key is backed by an index. InnoDB stores table rows in the clustered primary-key index.","A composite index stores multiple key parts in a defined order. The leftmost-prefix principle matters when choosing query predicates and sort keys.","An index on a low-selectivity column is not automatically useful; the optimizer chooses a plan based on statistics and cost.","EXPLAIN shows the planned access strategy. EXPLAIN ANALYZE executes the query and reports actual runtime information; use it thoughtfully."],example:"CREATE INDEX idx_employees_department_salary\nON employees (department_id, salary);\n\nEXPLAIN\nSELECT * FROM employees\nWHERE department_id = 1 AND salary > 70000;",questions:[
+["Beginner","Create an index on employees.department_id.","CREATE INDEX idx_employees_department\nON employees (department_id);","This may help queries filtering or joining by department_id. The foreign-key definition may already require or cause an index, so inspect indexes first."],
+["Intermediate","Display the query plan for employees earning above 70000.","EXPLAIN SELECT * FROM employees WHERE salary > 70000;","EXPLAIN shows how MySQL plans to access the rows."],
+["Intermediate","Create a composite index for department filtering followed by salary filtering.","CREATE INDEX idx_dept_salary\nON employees (department_id, salary);","The column order is intentional: department_id is the leftmost key part."],
+["Advanced","Remove the composite index.","DROP INDEX idx_dept_salary ON employees;","DROP INDEX removes the named index but does not delete table rows."]
+]},
+{group:"Database engineering",id:"views",title:"17. Views",concept:"A view is a named query that can be queried like a table. A normal view stores its definition, not a separate copy of the result rows.",syntax:"CREATE VIEW view_name AS\nSELECT ...;\n\nSELECT * FROM view_name;\nDROP VIEW view_name;",discussion:["Views can simplify repeated joins and expose only selected columns to users with appropriate privileges.","Whether a view is updatable depends on its definition; aggregates, grouping, DISTINCT and joins can restrict updates.","A view is not automatically a security boundary: permissions and the view's security mode matter."],example:"CREATE VIEW employee_department_view AS\nSELECT e.employee_id, e.name, e.salary, d.department_name\nFROM employees e JOIN departments d\nON e.department_id = d.department_id;",questions:[
+["Beginner","Create a view showing employee name and department name.","CREATE VIEW employee_department_view AS\nSELECT e.name, d.department_name\nFROM employees e JOIN departments d\nON e.department_id = d.department_id;","The view stores the SELECT definition."],
+["Beginner","Query the view to list employees in Engineering.","SELECT * FROM employee_department_view\nWHERE department_name = 'Engineering';","A view can be queried like a table."],
+["Intermediate","Inspect the view definition.","SHOW CREATE VIEW employee_department_view;","This displays the stored view definition."],
+["Intermediate","Drop the view without dropping the underlying tables.","DROP VIEW employee_department_view;","Only the view object is removed."]
+]},
+{group:"Advanced SQL",id:"windows",title:"18. Window functions",concept:"Window functions calculate values across a related set of rows while keeping each input row in the output. Unlike GROUP BY, they do not collapse each group into one row.",syntax:"function_name(...) OVER (\n  PARTITION BY column\n  ORDER BY column\n)",discussion:["ROW_NUMBER assigns a unique sequence within each partition.","RANK gives tied values the same rank and leaves gaps after ties; DENSE_RANK gives tied values the same rank without gaps.","PARTITION BY resets the calculation for each group. ORDER BY defines the order within the window.","LAG and LEAD access values from a previous or following row. A deterministic ORDER BY is important."],example:"SELECT name, department_id, salary,\n       DENSE_RANK() OVER (\n         PARTITION BY department_id ORDER BY salary DESC\n       ) AS salary_rank\nFROM employees;",questions:[
+["Beginner · ROW_NUMBER","Number employees from highest to lowest salary.","SELECT name, salary,\n       ROW_NUMBER() OVER (ORDER BY salary DESC) AS row_num\nFROM employees;","Each row receives a unique sequence number."],
+["Intermediate · RANK","Rank employees by salary within each department.","SELECT name, department_id, salary,\n       RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) AS dept_rank\nFROM employees;","Ranking restarts for each department; ties share rank and leave gaps."],
+["Intermediate · DENSE_RANK","Rank employees by salary within each department without gaps after ties.","SELECT name, department_id, salary,\n       DENSE_RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) AS dept_rank\nFROM employees;","DENSE_RANK does not leave gaps after tied ranks."],
+["Advanced · LAG","Show each employee's salary and the previous salary in descending salary order.","SELECT name, salary,\n       LAG(salary) OVER (ORDER BY salary DESC) AS previous_salary\nFROM employees;","LAG reads the value from the preceding row in the window order."],
+["Advanced · Running total","Calculate a running salary total ordered by employee_id.","SELECT employee_id, name, salary,\n       SUM(salary) OVER (ORDER BY employee_id\n         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_salary\nFROM employees;","The windowed SUM keeps each employee row and accumulates salary from the first ordered row."]
+]},
+{group:"DBMS and operations",id:"internals",title:"19. Query processing, storage and operations",concept:"SQL text is parsed, validated and optimized into an execution plan. The storage engine executes the plan and manages pages, indexes, locks and durable changes.",syntax:"EXPLAIN SELECT ...;\nSHOW ENGINE INNODB STATUS;",discussion:["A simplified query path: client → parser/validator → optimizer → execution engine/storage engine → result set.","InnoDB uses a buffer pool to cache data and index pages; redo and undo logs support durability and transaction behaviour.","Backups should be tested by restoring them. A backup that has never been restored is not a proven recovery plan.","Connection pools reuse database connections and must be sized with database capacity in mind.","Slow-query analysis should begin with measured evidence: query plan, rows examined, indexes, wait events and workload patterns."],example:"EXPLAIN SELECT e.name, d.department_name\nFROM employees e JOIN departments d\nON e.department_id = d.department_id\nWHERE e.department_id = 1;",questions:[
+["Beginner","Inspect the execution plan for a department filter.","EXPLAIN SELECT * FROM employees WHERE department_id = 1;","Review access type, possible keys, chosen key and estimated rows."],
+["Intermediate","Inspect indexes on employees.","SHOW INDEX FROM employees;","Lists indexes and their key columns."],
+["Advanced","Explain why adding an index to every column is not a good optimisation strategy.","-- Inspect workload and plans first:\nEXPLAIN SELECT * FROM employees WHERE salary > 70000;\nSHOW INDEX FROM employees;","Indexes consume storage and add write overhead. Add indexes for demonstrated workload needs, not indiscriminately."]
+]},
+{group:"DBMS and operations",id:"modern",title:"20. OLTP, OLAP, replication, NoSQL and distributed DBMS",concept:"Database architecture depends on workload and consistency requirements. Transactional applications, analytics platforms and distributed systems make different trade-offs.",syntax:"-- Explore metadata and workload using:\nSHOW DATABASES;\nSHOW TABLE STATUS;\nSHOW VARIABLES LIKE 'transaction_isolation';",discussion:["OLTP workloads prioritise many short transactions and correctness; OLAP workloads prioritise analytical scans and aggregations.","Replication copies data to other servers for read scaling or availability, but asynchronous replication can introduce lag.","Partitioning divides a table into manageable pieces within a database; sharding distributes data across multiple database instances.","NoSQL is a family: key-value, document, wide-column and graph databases solve different access patterns.","CAP is about consistency, availability and partition tolerance during a network partition; it is not a simplistic claim that every system permanently chooses only two properties."],example:"-- Inspect the current transaction isolation level\nSELECT @@transaction_isolation;",questions:[
+["Beginner","Check the MySQL transaction isolation level.","SELECT @@transaction_isolation;","Returns the session's current transaction isolation level."],
+["Intermediate","Explain one difference between OLTP and OLAP.","-- No single SQL statement: compare workload shape.\n-- OLTP: short inserts/updates/point lookups.\n-- OLAP: scans, joins and large aggregations.","The answer is conceptual: OLTP optimises transactional operations; OLAP optimises analytical queries."],
+["Advanced","Choose a data model for a product catalogue with flexible nested attributes and explain why.","-- Design discussion; no universal SQL answer.","A document database may fit flexible nested product attributes, but relational JSON support may also be suitable. Decide based on query patterns, constraints, consistency and operations."]
+]}
+];
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function code(s){return '<pre><button class="copy">Copy</button><code>'+esc(s)+'</code></pre>';}
+function renderLessons(){
+ const root=document.getElementById('lessons'); let current='';
+ lessons.forEach((l,idx)=>{
+   if(l.group!==current){current=l.group;const h=document.createElement('section');h.className='group-heading';h.innerHTML='<h2 class="section-title">'+esc(current)+'</h2><p class="lead">Work through every operation and variation before moving on.</p>';root.appendChild(h);}
+   const el=document.createElement('article');el.className='lesson';el.id=l.id;
+   const qhtml=l.questions.map((q,i)=>`<div class="question"><div class="qhead"><div><span class="tag">${esc(q[0])}</span><br><strong>Q${i+1}. ${esc(q[1])}</strong></div><button class="answer-btn" aria-expanded="false">Show answer</button></div><div class="answer"><div class="tag">SQL answer</div>${code(q[2])}<p><b>Discussion:</b> ${esc(q[3])}</p></div></div>`).join('');
+   el.innerHTML=`<div class="lesson-head"><div class="coverage">LESSON ${idx+1} · ${l.questions.length} PRACTICE QUESTIONS</div><h3>${esc(l.title)}</h3></div><div class="lesson-body"><h4>1. What is this concept?</h4><p>${esc(l.concept)}</p><h4>2. Syntax / query structure</h4>${code(l.syntax)}<h4>3. How to think about it</h4><ul>${l.discussion.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul><h4>4. Worked example</h4>${code(l.example)}<div class="note good"><b>How to study the example:</b> Identify the data source, selected values, conditions, grouping/sorting steps and expected shape of the result. Run it in MySQL and inspect the output.</div><h4>5. Practice — attempt before revealing</h4><p class="muted">Questions are arranged from direct use to combined and real-world scenarios. Reveal each answer to see executable SQL and why it works.</p>${qhtml}<label class="checklist"><input type="checkbox" class="lesson-done" data-id="${l.id}"> Mark this lesson complete</label></div>`;
+   root.appendChild(el);
+ });
+}
+function renderNav(){
+ const nav=document.getElementById('nav');let group='';
+ lessons.forEach(l=>{if(l.group!==group){group=l.group;const h=document.createElement('div');h.className='navhead';h.textContent=group;nav.appendChild(h);}const a=document.createElement('a');a.className='navlink';a.href='#'+l.id;a.textContent=l.title;nav.appendChild(a);});
+}
+function updateProgress(){
+ const done=JSON.parse(localStorage.getItem('sqlHandbookDone')||'{}');document.querySelectorAll('.lesson-done').forEach(c=>c.checked=!!done[c.dataset.id]);
+ const n=Object.values(done).filter(Boolean).length;document.getElementById('progressText').textContent=`${n} of ${lessons.length} lessons completed`;document.getElementById('progressBar').style.width=(n/lessons.length*100)+'%';
+}
+renderLessons();renderNav();updateProgress();
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.answer-btn');if(b){const ans=b.closest('.question').querySelector('.answer');ans.classList.toggle('open');const open=ans.classList.contains('open');b.textContent=open?'Hide answer':'Show answer';b.setAttribute('aria-expanded',String(open));}
+ const cp=e.target.closest('.copy');if(cp){const text=cp.parentElement.querySelector('code').innerText;navigator.clipboard?.writeText(text).then(()=>{cp.textContent='Copied';setTimeout(()=>cp.textContent='Copy',1200);}).catch(()=>{cp.textContent='Select to copy';});}
+});
+document.addEventListener('change',e=>{if(e.target.matches('.lesson-done')){const done=JSON.parse(localStorage.getItem('sqlHandbookDone')||'{}');done[e.target.dataset.id]=e.target.checked;localStorage.setItem('sqlHandbookDone',JSON.stringify(done));updateProgress();}});
+document.getElementById('themeBtn').addEventListener('click',()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';localStorage.setItem('sqlHandbookTheme',dark?'dark':'light');});
+if(localStorage.getItem('sqlHandbookTheme')==='dark')document.documentElement.dataset.theme='dark';
+document.getElementById('navSearch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.navlink').forEach(a=>a.style.display=a.textContent.toLowerCase().includes(q)?'block':'none');document.querySelectorAll('.navhead').forEach(h=>{let next=h.nextElementSibling,show=false;while(next&&!next.classList.contains('navhead')){if(next.style.display!=='none')show=true;next=next.nextElementSibling;}h.style.display=show?'block':'none';});});
+</script>
+<script src="header.js"></script>
+</body>
+</html>

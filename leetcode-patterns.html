@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode Patterns Complete Handbook — Java Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'Fira Code', monospace; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+        @media print {
+            body { background: white !important; color: black !important; }
+            aside, header, .no-print { display: none !important; }
+            main { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
+    <div id="shared-header"></div>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-80 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 z-30">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base leading-tight">LeetCode Patterns</h1>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Java Masterclass Handbook</p>
+                    </div>
+                </div>
+                <button id="themeToggle" class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Toggle Theme">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                </button>
+            </div>
+
+            <!-- Search Bar & Filters -->
+            <div class="p-3 border-b border-slate-200 dark:border-slate-800 space-y-2">
+                <div class="relative">
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Search patterns, problems..." class="w-full pl-9 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-800 rounded-lg border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none transition">
+                </div>
+                <div class="flex gap-1">
+                    <button onclick="filterDifficulty('ALL')" class="flex-1 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white transition">All</button>
+                    <button onclick="filterDifficulty('Easy')" class="flex-1 py-1 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400">Easy</button>
+                    <button onclick="filterDifficulty('Medium')" class="flex-1 py-1 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400">Med</button>
+                    <button onclick="filterDifficulty('Hard')" class="flex-1 py-1 text-xs font-semibold rounded bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400">Hard</button>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex justify-between items-center text-xs mb-1.5 font-medium">
+                    <span class="text-slate-600 dark:text-slate-400">Mastery Progress</span>
+                    <span id="progressText" class="text-indigo-600 dark:text-indigo-400">0 / 45 completed</span>
+                </div>
+                <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2">
+                    <div id="progressBar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <div id="navLinks" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1 text-sm font-medium">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Footer Action -->
+            <div class="p-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500">
+                <span>Java 17+ Edition</span>
+                <button onclick="window.print()" class="hover:text-indigo-600 transition flex items-center gap-1">
+                    <i class="fa-solid fa-print"></i> Print PDF
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+            <!-- Top Mobile Header -->
+            <header class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur flex items-center justify-between px-6 lg:hidden z-20">
+                <button id="sidebarToggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <span class="font-bold text-sm truncate" id="mobileTitle">LeetCode Patterns</span>
+                <div class="w-8"></div>
+            </header>
+
+            <!-- Scrollable Content View -->
+            <div id="contentArea" class="flex-1 overflow-y-auto custom-scrollbar p-6 lg:p-12 focus:outline-none">
+                <!-- Dynamic Content injected here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 px-4 py-3 rounded-xl shadow-2xl text-sm font-medium transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMessage">Action completed successfully</span>
+    </div>
+
+    <script>
+        // Comprehensive LeetCode Handbook Data covering 15 Categories & Patterns
+        const handbookData = [
+            {
+                category: "1. Arrays and Hashing",
+                icon: "fa-layer-group",
+                patterns: [
+                    {
+                        id: "two-sum-pattern",
+                        title: "Two Sum & Hash Map Frequency",
+                        introduction: "The HashMap pattern leverages O(1) average time complexity lookups to eliminate nested O(N^2) loops by storing complements or frequencies during single-pass traversals.",
+                        recognition: "Look for problems requiring finding pairs that sum to a target, frequency counting, anagram grouping, or duplicate detection in linear time.",
+                        examplesInput: "nums = [2, 7, 11, 15], target = 9",
+                        examplesOutput: "[0, 1]",
+                        problems: [
+                            {
+                                id: "lc-1",
+                                number: "1",
+                                title: "Two Sum",
+                                difficulty: "Easy",
+                                link: "https://leetcode.com/problems/two-sum/",
+                                statement: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+                                inputOutput: "Input: nums = [2,7,11,15], target = 9 -> Output: [0,1]",
+                                constraints: "2 <= nums.length <= 10^4",
+                                variation: "Complement Hash lookup",
+                                teaches: "Trading space complexity for time using HashMap complements.",
+                                understanding: "We need indices i, j such that nums[i] + nums[j] = target. Return [i, j].",
+                                bruteForce: "Nested loops checking every pair O(N^2) time.",
+                                optimized: "Single pass HashMap storing (target - num, index).",
+                                code: `class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i };
+            }
+            map.put(nums[i], i);
+        }
+        throw new IllegalArgumentException("No two sum solution");
+    }
+}`,
+                                explanation: "As we iterate through nums, we calculate complement = target - current element. If complement exists in map, we found our pair. Otherwise, store current element and index in map.",
+                                dryRun: "nums = [2, 7, 11, 15], target = 9. i=0: num=2, comp=7 not in map. map.put(2,0). i=1: num=7, comp=2 found in map at index 0. Returns [0, 1].",
+                                complexity: "Time: O(N), Space: O(N)",
+                                edgeCases: "Negative numbers, duplicate values, exactly two elements.",
+                                alternatives: "Sorting + Two Pointers takes O(N log N) time."
+                            },
+                            {
+                                id: "lc-242",
+                                number: "242",
+                                title: "Valid Anagram",
+                                difficulty: "Easy",
+                                link: "https://leetcode.com/problems/valid-anagram/",
+                                statement: "Given two strings s and t, return true if t is an anagram of s, and false otherwise.",
+                                inputOutput: "Input: s = \"anagram\", t = \"nagaram\" -> Output: true",
+                                constraints: "1 <= s.length, t.length <= 5 * 10^4",
+                                variation: "Character Frequency Array",
+                                teaches: "Using fixed-size arrays for O(1) frequency counting of lowercase English alphabets.",
+                                understanding: "Check if both strings contain exact same character counts.",
+                                bruteForce: "Sorting both strings and comparing O(N log N).",
+                                optimized: "Frequency array of size 26 for O(N) time and O(1) space.",
+                                code: `class Solution {
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) return false;
+        int[] count = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            count[s.charAt(i) - 'a']++;
+            count[t.charAt(i) - 'a']--;
+        }
+        for (int c : count) {
+            if (c != 0) return false;
+        }
+        return true;
+    }
+}`,
+                                explanation: "Increment count for characters in s, decrement for characters in t. If all counts equal zero, they are anagrams.",
+                                dryRun: "s='ab', t='ba'. count['a']++ (1), count['b']++ (1), count['b']-- (0), count['a']-- (0). All zero -> true.",
+                                complexity: "Time: O(N), Space: O(1)",
+                                edgeCases: "Different lengths, empty strings, Unicode characters.",
+                                alternatives: "HashMap frequency counter."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "2. Two Pointers",
+                icon: "fa-arrows-left-right",
+                patterns: [
+                    {
+                        id: "opposite-direction-pointers",
+                        title: "Opposite-Direction & Fast/Slow Pointers",
+                        introduction: "Two pointers technique uses two index variables moving towards each other (sorted arrays, palindromes) or in the same direction (fast/slow for linked lists or deduplication).",
+                        recognition: "Look for sorted arrays, palindrome checking, container with most water, or linked list cycle/middle detection.",
+                        examplesInput: "nums = [1, 2, 3, 4, 6], target = 6",
+                        examplesOutput: "[1, 3] (values 2 and 4)",
+                        problems: [
+                            {
+                                id: "lc-167",
+                                number: "167",
+                                title: "Two Sum II - Input Array Is Sorted",
+                                difficulty: "Medium",
+                                link: "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+                                statement: "Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, find two numbers such that they add up to a specific target number.",
+                                inputOutput: "Input: numbers = [2,7,11,15], target = 9 -> Output: [1,2]",
+                                constraints: "2 <= numbers.length <= 3 * 10^4",
+                                variation: "Opposite Direction Pointers",
+                                teaches: "Exploiting sorted property with left and right pointers in O(N) time and O(1) space.",
+                                understanding: "Find 1-indexed positions i < j where numbers[i] + numbers[j] == target.",
+                                bruteForce: "Nested loops O(N^2).",
+                                optimized: "Left pointer at 0, right pointer at n-1. If sum < target, left++; if sum > target, right--.",
+                                code: `class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int left = 0, right = numbers.length - 1;
+        while (left < right) {
+            int sum = numbers[left] + numbers[right];
+            if (sum == target) {
+                return new int[] { left + 1, right + 1 };
+            } else if (sum < target) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return new int[0];
+    }
+}`,
+                                explanation: "Because the array is sorted, moving left pointer increases sum, while moving right pointer decreases sum.",
+                                dryRun: "numbers = [2,7,11,15], target = 9. left=0(2), right=3(15), sum=17 > 9 -> right=2(11). sum=13 > 9 -> right=1(7). sum=9 == target -> returns [1, 2].",
+                                complexity: "Time: O(N), Space: O(1)",
+                                edgeCases: "Two elements, minimum/maximum target bounds.",
+                                alternatives: "Binary search for each element O(N log N)."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "3. Sliding Window",
+                icon: "fa-window-maximize",
+                patterns: [
+                    {
+                        id: "variable-sliding-window",
+                        title: "Fixed & Variable Size Sliding Window",
+                        introduction: "Sliding Window replaces nested loops when dealing with subarrays or substrings of continuous elements, maintaining a running window state in O(N) time.",
+                        recognition: "Look for 'longest/shortest substring/subarray', 'contiguous elements', or 'window of size K'.",
+                        examplesInput: "s = \"abcabcbb\"",
+                        examplesOutput: "3 (\"abc\")",
+                        problems: [
+                            {
+                                id: "lc-3",
+                                number: "3",
+                                title: "Longest Substring Without Repeating Characters",
+                                difficulty: "Medium",
+                                link: "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+                                statement: "Given a string s, find the length of the longest substring without repeating characters.",
+                                inputOutput: "Input: s = \"abcabcbb\" -> Output: 3",
+                                constraints: "0 <= s.length <= 5 * 10^4",
+                                variation: "Variable Size Sliding Window with HashSet",
+                                teaches: "Managing window bounds dynamically when duplicate characters appear.",
+                                understanding: "Find max length of substring with unique characters.",
+                                bruteForce: "Check all possible substrings O(N^3).",
+                                optimized: "Left and right pointers with HashSet tracking active characters.",
+                                code: `class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int left = 0, maxLength = 0;
+        Set<Character> set = new HashSet<>();
+        for (int right = 0; right < s.length(); right++) {
+            while (set.contains(s.charAt(right))) {
+                set.remove(s.charAt(left++));
+            }
+            set.add(s.charAt(right));
+            maxLength = Math.max(maxLength, right - left + 1);
+        }
+        return maxLength;
+    }
+}`,
+                        explanation: "Expand right pointer. If duplicate found, shrink left pointer until duplicate is removed, updating max length.",
+                        dryRun: "s='abcabcbb'. r=0('a'): set={a}, len=1. r=1('b'): set={a,b}, len=2. r=2('c'): set={a,b,c}, len=3. r=3('a'): 'a' in set, left shrinks past first 'a'.",
+                        complexity: "Time: O(N), Space: O(min(N, charset))",
+                        edgeCases: "Empty string, string with all identical characters.",
+                        alternatives: "HashMap storing last seen index for O(1) jump optimization."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "4. Binary Search",
+                icon: "fa-magnifying-glass",
+                patterns: [
+                    {
+                        id: "binary-search-standard",
+                        title: "Standard & Search Space Binary Search",
+                        introduction: "Binary Search halves the search space logarithmically O(log N) on sorted data or monotonic boolean predicate functions.",
+                        recognition: "Look for sorted arrays, 'find element in O(log N)', or 'min/max capacity optimization problems'.",
+                        examplesInput: "nums = [-1,0,3,5,9,12], target = 9",
+                        examplesOutput: "4",
+                        problems: [
+                            {
+                                id: "lc-704",
+                                number: "704",
+                                title: "Binary Search",
+                                difficulty: "Easy",
+                                link: "https://leetcode.com/problems/binary-search/",
+                                statement: "Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums.",
+                                inputOutput: "Input: nums = [-1,0,3,5,9,12], target = 9 -> Output: 4",
+                                constraints: "1 <= nums.length <= 10^4",
+                                variation: "Standard Binary Search",
+                                teaches: "Core pointer manipulation (left, right, mid) without integer overflow.",
+                                understanding: "Find index of target in sorted array in O(log N).",
+                                bruteForce: "Linear search O(N).",
+                                optimized: "Standard binary search with mid calculation.",
+                                code: `class Solution {
+    public int search(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            else if (nums[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1;
+    }
+}`,
+                                explanation: "Compute mid index safely. If nums[mid] equals target return index; else adjust left or right pointers.",
+                                dryRun: "nums=[-1,0,3,5,9,12], target=9. l=0, r=5 -> mid=2(3). 3<9 -> l=3. l=3, r=5 -> mid=4(9). 9==9 -> returns 4.",
+                                complexity: "Time: O(log N), Space: O(1)",
+                                edgeCases: "Single element, target not present, empty array.",
+                                alternatives: "Linear scan."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "5. Stack and Monotonic Stack",
+                icon: "fa-bars-staggered",
+                patterns: [
+                    {
+                        id: "monotonic-stack",
+                        title: "Monotonic Stack & Parentheses",
+                        introduction: "A Monotonic Stack maintains elements in strictly increasing or decreasing order, solving 'next greater element' or histogram area problems in linear time O(N).",
+                        recognition: "Look for matching parentheses, nested expressions, or finding the next greater/smaller element for each array item.",
+                        examplesInput: "temperatures = [73, 74, 75, 71, 69, 72, 76, 73]",
+                        examplesOutput: "[1, 1, 4, 2, 1, 1, 0, 0]",
+                        problems: [
+                            {
+                                id: "lc-739",
+                                number: "739",
+                                title: "Daily Temperatures",
+                                difficulty: "Medium",
+                                link: "https://leetcode.com/problems/daily-temperatures/",
+                                statement: "Given an array of integers temperatures represents daily temperatures, return an array answer such that answer[i] is the number of days you have to wait after the ith day to get a warmer temperature.",
+                                inputOutput: "Input: temperatures = [73,74,75,71,69,72,76,73] -> Output: [1,1,4,2,1,1,0,0]",
+                                constraints: "1 <= temperatures.length <= 10^5",
+                                variation: "Monotonic Decreasing Stack",
+                                teaches: "Storing indices in a stack to resolve future warmer days efficiently.",
+                                understanding: "Find distance to next greater element for every index.",
+                                bruteForce: "Nested loops checking future days O(N^2).",
+                                optimized: "Monotonic stack storing indices of unresolved temperatures.",
+                                code: `class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] result = new int[n];
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && temperatures[i] > temperatures[stack.peek()]) {
+                int idx = stack.pop();
+                result[idx] = i - idx;
+            }
+            stack.push(i);
+        }
+        return result;
+    }
+}`,
+                                explanation: "Iterate through temperatures. When current temperature exceeds stack peek temperature, pop index and calculate distance.",
+                                dryRun: "i=0 (73): push 0. i=1 (74): 74 > 73, pop 0, result[0]=1-0=1, push 1.",
+                                complexity: "Time: O(N), Space: O(N)",
+                                edgeCases: "Already descending temperatures, single element.",
+                                alternatives: "Backward iteration array scanning."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "6. Linked Lists",
+                icon: "fa-link",
+                patterns: [
+                    {
+                        id: "linked-list-reversal",
+                        title: "Reversal, Dummy Node & Fast/Slow Pointers",
+                        introduction: "Linked List patterns involve pointer manipulation for reversal, finding cycles with Tortoise and Hare pointers, or merging sorted nodes using a dummy head.",
+                        recognition: "Look for singly/doubly linked list modification, cycle detection, or finding middle nodes.",
+                        examplesInput: "head = [1, 2, 3, 4, 5]",
+                        examplesOutput: "[5, 4, 3, 2, 1]",
+                        problems: [
+                            {
+                                id: "lc-206",
+                                number: "206",
+                                title: "Reverse Linked List",
+                                difficulty: "Easy",
+                                link: "https://leetcode.com/problems/reverse-linked-list/",
+                                statement: "Given the head of a singly linked list, reverse the list, and return the reversed list.",
+                                inputOutput: "Input: head = [1,2,3,4,5] -> Output: [5,4,3,2,1]",
+                                constraints: "0 <= Node.val <= 5000",
+                                variation: "Iterative Pointer Reversal",
+                                teaches: "Reversing next pointers using previous, current, and next temporary variables.",
+                                understanding: "Invert pointer directions for all nodes in O(N) time and O(1) space.",
+                                bruteForce: "Store values in array, recreate list (O(N) space).",
+                                optimized: "Iterative pointer reversal in place.",
+                                code: `class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        return prev;
+    }
+}`,
+                                explanation: "Maintain prev and curr. Save nextTemp, point curr.next to prev, advance prev and curr.",
+                                dryRun: "head=1->2. prev=null, curr=1. nextTemp=2, 1.next=null, prev=1, curr=2. Next iteration reverses 2->1.",
+                                complexity: "Time: O(N), Space: O(1)",
+                                edgeCases: "Empty list, single node list.",
+                                alternatives: "Recursive reversal."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "7. Trees and Binary Search Trees",
+                icon: "fa-tree",
+                patterns: [
+                    {
+                        id: "tree-dfs-bfs",
+                        title: "Recursive DFS, Iterative DFS & BFS Level-Order",
+                        introduction: "Tree traversal patterns explore hierarchical nodes using Depth-First Search (pre/in/post-order) or Breadth-First Search (level order queues).",
+                        recognition: "Look for binary trees, BST validation, lowest common ancestor, path sums, or level-by-level processing.",
+                        examplesInput: "root = [3,9,20,null,null,15,7]",
+                        examplesOutput: "[[3],[9,20],[15,7]]",
+                        problems: [
+                            {
+                                id: "lc-102",
+                                number: "102",
+                                title: "Binary Tree Level Order Traversal",
+                                difficulty: "Medium",
+                                link: "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+                                statement: "Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).",
+                                inputOutput: "Input: root = [3,9,20,null,null,15,7] -> Output: [[3],[9,20],[15,7]]",
+                                constraints: "0 <= Node.val <= 2000",
+                                variation: "BFS Level Order Queue",
+                                teaches: "Using a Queue to process tree nodes level by level.",
+                                understanding: "Group node values by their depth level.",
+                                bruteForce: "DFS with level tracking hashmap.",
+                                optimized: "BFS queue processing per level size.",
+                                code: `class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) return result;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> currentLevel = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                currentLevel.add(node.val);
+                if (node.left != null) queue.offer(node.left);
+                if (node.right != null) queue.offer(node.right);
+            }
+            result.add(currentLevel);
+        }
+        return result;
+    }
+}`,
+                                explanation: "Process queue level by level by capturing queue size at the start of each level loop iteration.",
+                                dryRun: "Root=3. Queue has [3]. Size=1. Poll 3, add children 9 and 20. Level list [3] added to result.",
+                                complexity: "Time: O(N), Space: O(N)",
+                                edgeCases: "Null root, skewed tree.",
+                                alternatives: "Recursive DFS passing level index."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "8. Heaps and Priority Queues",
+                icon: "fa-mountain",
+                patterns: [
+                    {
+                        id: "top-k-elements",
+                        title: "Top K Elements & K-Way Merge",
+                        introduction: "Heaps (PriorityQueues in Java) maintain min/max elements in O(log N) time, perfect for Top K problems, running medians, and merging sorted streams.",
+                        recognition: "Look for 'Kth largest/smallest', 'top frequent elements', or 'merge K sorted lists'.",
+                        examplesInput: "nums = [3,2,1,5,6,4], k = 2",
+                        examplesOutput: "5",
+                        problems: [
+                            {
+                                id: "lc-215",
+                                number: "215",
+                                title: "Kth Largest Element in an Array",
+                                difficulty: "Medium",
+                                link: "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+                                statement: "Given an integer array nums and an integer k, return the kth largest element in the array.",
+                                inputOutput: "Input: nums = [3,2,1,5,6,4], k = 2 -> Output: 5",
+                                constraints: "1 <= k <= nums.length <= 10^5",
+                                variation: "Min-Heap of Size K",
+                                teaches: "Keeping the K largest elements in a min-heap to find the Kth largest in O(N log K) time.",
+                                understanding: "Find Kth largest element efficiently.",
+                                bruteForce: "Sort array descending and return index k-1 O(N log N).",
+                                optimized: "Min-heap of size K where root is the Kth largest.",
+                                code: `class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        for (int num : nums) {
+            minHeap.offer(num);
+            if (minHeap.size() > k) {
+                minHeap.poll();
+            }
+        }
+        return minHeap.peek();
+    }
+}`,
+                                explanation: "Push elements into min-heap. When size exceeds K, poll the smallest element. The heap root will be the Kth largest element.",
+                                dryRun: "nums=[3,2,1,5,6,4], k=2. Heap stores elements. When size > 2, smallest popped. Peek returns 5.",
+                                complexity: "Time: O(N log K), Space: O(K)",
+                                edgeCases: "k = 1, array with duplicates.",
+                                alternatives: "Quickselect algorithm O(N) average time."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "9. Backtracking",
+                icon: "fa-route",
+                patterns: [
+                    {
+                        id: "subsets-permutations",
+                        title: "Subsets, Permutations & Combination Sum",
+                        introduction: "Backtracking explores all potential decision tree branches recursively, pruning invalid states and undoing choices (backtracking) to find valid solutions.",
+                        recognition: "Look for 'generate all subsets, permutations, combinations', Sudoku solvers, or word search grids.",
+                        examplesInput: "nums = [1, 2, 3]",
+                        examplesOutput: "[[],[1],[1,2],[1,2,3],[1,3],[2],[2,3],[3]]",
+                        problems: [
+                            {
+                                id: "lc-78",
+                                number: "78",
+                                title: "Subsets",
+                                difficulty: "Medium",
+                                link: "https://leetcode.com/problems/subsets/",
+                                statement: "Given an integer array nums of unique elements, return all possible subsets (the power set).",
+                                inputOutput: "Input: nums = [1,2,3] -> Output: [[],[1],[1,2],[1,2,3],[1,3],[2],[2,3],[3]]",
+                                constraints: "1 <= nums.length <= 10",
+                                variation: "Backtracking Subset Generation",
+                                teaches: "Building power set recursively by including or excluding each element.",
+                                understanding: "Generate 2^N subsets of unique integers.",
+                                bruteForce: "Bit manipulation power set generation.",
+                                optimized: "Recursive backtracking DFS.",
+                                code: `class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(result, new ArrayList<>(), nums, 0);
+        return result;
+    }
+
+    private void backtrack(List<List<Integer>> result, List<Integer> tempList, int[] nums, int start) {
+        result.add(new ArrayList<>(tempList));
+        for (int i = start; i < nums.length; i++) {
+            tempList.add(nums[i]);
+            backtrack(result, tempList, nums, i + 1);
+            tempList.remove(tempList.size() - 1);
+        }
+    }
+}`,
+                                explanation: "At each step, add current tempList to result. Iterate from start index, add number, recurse with i+1, then remove last element (backtrack).",
+                                dryRun: "nums=[1,2]. Start with []. Add []. i=0: add 1 -> [1], recurse. i=1: add 2 -> [1,2], recurse. Backtrack removes elements.",
+                                complexity: "Time: O(N * 2^N), Space: O(N)",
+                                edgeCases: "Empty array, single element.",
+                                alternatives: "Cascading iterative subset generation."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "10. Graphs",
+                icon: "fa-project-diagram",
+                patterns: [
+                    {
+                        id: "graph-bfs-dfs",
+                        title: "Matrix Traversal, Topological Sort & Dijkstra",
+                        introduction: "Graph algorithms traverse vertices and edges using BFS (shortest path in unweighted graphs), DFS (connected components), or topological sorting (DAG dependency resolution).",
+                        recognition: "Look for grids, islands, course schedules, connected components, or shortest path problems.",
+                        examplesInput: "grid = [[1,1,0],[0,1,0],[1,1,0]]",
+                        examplesOutput: "Number of islands / Connected components",
+                        problems: [
+                            {
+                                id: "lc-200",
+                                number: "200",
+                                title: "Number of Islands",
+                                difficulty: "Medium",
+                                link: "https://leetcode.com/problems/number-of-islands/",
+                                statement: "Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.",
+                                inputOutput: "Input: grid = 4x4 matrix -> Output: 1",
+                                constraints: "m == grid.length, n == grid[i].length",
+                                variation: "Grid DFS Connected Components",
+                                teaches: "Marking visited land cells recursively to count distinct islands.",
+                                understanding: "Count connected components of '1's in a 2D matrix.",
+                                bruteForce: "Disjoint Set Union (DSU).",
+                                optimized: "DFS flood fill sinking visited land cells.",
+                                code: `class Solution {
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) return 0;
+        int count = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == '1') {
+                    count++;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        return count;
+    }
+
+    private void dfs(char[][] grid, int i, int j) {
+        if (i < 0 || j < 0 || i >= grid.length || j >= grid[0].length || grid[i][j] == '0') return;
+        grid[i][j] = '0'; // mark visited
+        dfs(grid, i + 1, j);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i, j - 1);
+    }
+}`,
+                        explanation: "Iterate grid. When '1' is found, increment island count and trigger DFS to sink all connected '1's to '0'.",
+                        dryRun: "Found '1' at (0,0). count=1. DFS sinks (0,0), (0,1), etc. Subsequent cells skipped.",
+                        complexity: "Time: O(M * N), Space: O(M * N) recursion stack",
+                        edgeCases: "All water, all land, single cell.",
+                        alternatives: "BFS queue flood fill."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "11. Greedy Algorithms",
+                icon: "fa-bolt",
+                patterns: [
+                    {
+                        id: "greedy-intervals",
+                        title: "Interval Scheduling & Local Optimal Choice",
+                        introduction: "Greedy algorithms make the locally optimal choice at each stage with the intent of finding the global optimum.",
+                        recognition: "Look for interval merging, jump games, activity selection, or coin change optimization.",
+                        examplesInput: "intervals = [[1,3],[2,6],[8,10],[15,18]]",
+                        examplesOutput: "[[1,6],[8,10],[15,18]]",
+                        problems: [
+                            {
+                                id: "lc-56",
+                                number: "56",
+                                title: "Merge Intervals",
+                                difficulty: "Medium",
+                                link: "https://leetcode.com/problems/merge-intervals/",
+                                statement: "Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals.",
+                                inputOutput: "Input: intervals = [[1,3],[2,6],[8,10],[15,18]] -> Output: [[1,6],[8,10],[15,18]]",
+                                constraints: "1 <= intervals.length <= 10^4",
+                                variation: "Sorting + Greedy Interval Merge",
+                                teaches: "Sorting intervals by start time and merging overlapping boundaries.",
+                                understanding: "Combine overlapping time intervals.",
+                                bruteForce: "Compare every interval with every other interval O(N^2).",
+                                optimized: "Sort by start time, compare end times in O(N log N).",
+                                code: `class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length <= 1) return intervals;
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        List<int[]> merged = new ArrayList<>();
+        int[] currentInterval = intervals[0];
+        merged.add(currentInterval);
+        for (int[] interval : intervals) {
+            int currentEnd = currentInterval[1];
+            int nextStart = interval[0];
+            int nextEnd = interval[1];
+            if (nextStart <= currentEnd) {
+                currentInterval[1] = Math.max(currentEnd, nextEnd);
+            } else {
+                currentInterval = interval;
+                merged.add(currentInterval);
+            }
+        }
+        return merged.toArray(new int[merged.size()][]);
+    }
+}`,
+                                explanation: "Sort intervals by start time. If next interval starts before current interval ends, merge them by updating end time.",
+                                dryRun: "[1,3] and [2,6]. 2 <= 3, so merge into [1,6].",
+                                complexity: "Time: O(N log N), Space: O(N)",
+                                edgeCases: "No overlap, fully nested intervals, single interval.",
+                                alternatives: "Connected components graph approach."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "12. Dynamic Programming",
+                icon: "fa-brain",
+                patterns: [
+                    {
+                        id: "dp-1d-2d",
+                        title: "1D/2D DP, Memoization & Tabulation",
+                        introduction: "Dynamic Programming solves complex problems by breaking them down into simpler overlapping subproblems and storing results in memoization tables or bottom-up tabulation arrays.",
+                        recognition: "Look for 'maximum/minimum value', 'number of ways to do X', or optimal substructure.",
+                        examplesInput: "n = 5",
+                        examplesOutput: "8 (Climbing Stairs ways)",
+                        problems: [
+                            {
+                                id: "lc-70",
+                                number: "70",
+                                title: "Climbing Stairs",
+                                difficulty: "Easy",
+                                link: "https://leetcode.com/problems/climbing-stairs/",
+                                statement: "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. Return the number of distinct ways you can climb to the top.",
+                                inputOutput: "Input: n = 3 -> Output: 3",
+                                constraints: "1 <= n <= 45",
+                                variation: "1D DP / Fibonacci Sequence",
+                                teaches: "Bottom-up tabulation optimizing space to O(1).",
+                                understanding: "Calculate ways(n) = ways(n-1) + ways(n-2).",
+                                bruteForce: "Recursive Fibonacci O(2^N).",
+                                optimized: "Iterative DP with two variables O(N) time, O(1) space.",
+                                code: `class Solution {
+    public int climbStairs(int n) {
+        if (n <= 2) return n;
+        int prev1 = 1, prev2 = 2;
+        for (int i = 3; i <= n; i++) {
+            int current = prev1 + prev2;
+            prev1 = prev2;
+            prev2 = current;
+        }
+        return prev2;
+    }
+}`,
+                                explanation: "To reach step n, you came from step n-1 or n-2. This is identical to the Fibonacci sequence.",
+                                dryRun: "n=3. prev1=1, prev2=2. i=3: current = 1+2 = 3. Returns 3.",
+                                complexity: "Time: O(N), Space: O(1)",
+                                edgeCases: "n = 1, n = 2.",
+                                alternatives: "Matrix exponentiation O(log N)."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "13. Tries and String Algorithms",
+                icon: "fa-font",
+                patterns: [
+                    {
+                        id: "trie-prefix",
+                        title: "Trie (Prefix Tree) & String Matching",
+                        introduction: "A Trie is a tree data structure used to store strings efficiently for prefix searching, autocomplete, and dictionary lookups in O(M) time where M is string length.",
+                        recognition: "Look for prefix matching, autocomplete, dictionary word search, or word break problems.",
+                        examplesInput: "insert(\"apple\"), search(\"apple\")",
+                        examplesOutput: "true",
+                        problems: [
+                            {
+                                id: "lc-208",
+                                number: "208",
+                                title: "Implement Trie (Prefix Tree)",
+                                difficulty: "Medium",
+                                link: "https://leetcode.com/problems/implement-trie-prefix-tree/",
+                                statement: "A trie (pronounced as 'try') or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings.",
+                                inputOutput: "Methods: insert, search, startsWith",
+                                constraints: "1 <= word.length <= 2000",
+                                variation: "Trie Node Structure",
+                                teaches: "Building tree nodes with 26-child character arrays and boolean end flags.",
+                                understanding: "Implement insert, search, and startsWith operations.",
+                                bruteForce: "HashSet storing all inserted strings (inefficient prefix search).",
+                                optimized: "Trie data structure with O(M) lookup time.",
+                                code: `class Trie {
+    private static class TrieNode {
+        TrieNode[] children = new TrieNode[26];
+        boolean isEnd = false;
+    }
+
+    private final TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    public void insert(String word) {
+        TrieNode curr = root;
+        for (char c : word.toCharArray()) {
+            int idx = c - 'a';
+            if (curr.children[idx] == null) {
+                curr.children[idx] = new TrieNode();
+            }
+            curr = curr.children[idx];
+        }
+        curr.isEnd = true;
+    }
+
+    public boolean search(String word) {
+        TrieNode curr = searchNode(word);
+        return curr != null && curr.isEnd;
+    }
+
+    public boolean startsWith(String prefix) {
+        return searchNode(prefix) != null;
+    }
+
+    private TrieNode searchNode(String str) {
+        TrieNode curr = root;
+        for (char c : str.toCharArray()) {
+            int idx = c - 'a';
+            if (curr.children[idx] == null) return null;
+            curr = curr.children[idx];
+        }
+        return curr;
+    }
+}`,
+                                explanation: "Each node contains 26 children pointers. Traverse characters down the trie, creating nodes if missing.",
+                                dryRun: "Insert 'cat': c -> a -> t (isEnd=true). Search 'cat' returns true.",
+                                complexity: "Time: O(M) per operation, Space: O(total characters)",
+                                edgeCases: "Empty string, searching non-existent prefixes.",
+                                alternatives: "HashMap prefix checks."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "14. Bit Manipulation",
+                icon: "fa-microchip",
+                patterns: [
+                    {
+                        id: "bit-manipulation",
+                        title: "XOR Patterns & Bit Masks",
+                        introduction: "Bit manipulation leverages bitwise operators (&, |, ^, ~, <<, >>) to solve problems in O(1) space with lightning-fast bitwise arithmetic.",
+                        recognition: "Look for 'find single number', 'count set bits', 'power of two', or subset generation via bitmasks.",
+                        examplesInput: "nums = [4, 1, 2, 1, 2]",
+                        examplesOutput: "4",
+                        problems: [
+                            {
+                                id: "lc-136",
+                                number: "136",
+                                title: "Single Number",
+                                difficulty: "Easy",
+                                link: "https://leetcode.com/problems/single-number/",
+                                statement: "Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.",
+                                inputOutput: "Input: nums = [4,1,2,1,2] -> Output: 4",
+                                constraints: "1 <= nums.length <= 3 * 10^4",
+                                variation: "XOR Cancellation",
+                                teaches: "Using XOR properties (a ^ a = 0 and a ^ 0 = a) to isolate single elements in O(N) time and O(1) space.",
+                                understanding: "Find element appearing only once while others appear twice.",
+                                bruteForce: "HashMap frequency counting O(N) time and space.",
+                                optimized: "XOR all numbers together; duplicates cancel out.",
+                                code: `class Solution {
+    public int singleNumber(int[] nums) {
+        int result = 0;
+        for (int num : nums) {
+            result ^= num;
+        }
+        return result;
+    }
+}`,
+                                explanation: "XORing a number with itself results in 0. XORing with 0 results in the number. All paired numbers cancel out, leaving the single number.",
+                                dryRun: "nums=[4,1,2,1,2]. 4 ^ 1 ^ 2 ^ 1 ^ 2 = (1^1) ^ (2^2) ^ 4 = 0 ^ 0 ^ 4 = 4.",
+                                complexity: "Time: O(N), Space: O(1)",
+                                edgeCases: "Single element array.",
+                                alternatives: "HashSet frequency tracking."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "15. Advanced Patterns",
+                icon: "fa-rocket",
+                patterns: [
+                    {
+                        id: "advanced-monotonic-deque",
+                        title: "Monotonic Deque & Sliding Window Maximum",
+                        introduction: "Advanced patterns like Monotonic Deques maintain elements in monotonic order from both ends in O(N) time for sliding window extrema.",
+                        recognition: "Look for sliding window maximum/minimum, sweep line events, or segment tree range queries.",
+                        examplesInput: "nums = [1,3,-1,-3,5,3,6,7], k = 3",
+                        examplesOutput: "[3,3,5,5,6,7]",
+                        problems: [
+                            {
+                                id: "lc-239",
+                                number: "239",
+                                title: "Sliding Window Maximum",
+                                difficulty: "Hard",
+                                link: "https://leetcode.com/problems/sliding-window-maximum/",
+                                statement: "You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. Return the max sliding window.",
+                                inputOutput: "Input: nums = [1,3,-1,-3,5,3,6,7], k = 3 -> Output: [3,3,5,5,6,7]",
+                                constraints: "1 <= nums.length <= 10^5",
+                                variation: "Monotonic Decreasing Deque",
+                                teaches: "Maintaining indices in a deque to find window maximums in O(N) time.",
+                                understanding: "Find maximum value in every window of size K.",
+                                bruteForce: "Nested loops checking every window O(N * K).",
+                                optimized: "Monotonic decreasing deque storing indices.",
+                                code: `class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums == null || k <= 0) return new int[0];
+        int n = nums.length;
+        int[] result = new int[n - k + 1];
+        int ri = 0;
+        Deque<Integer> deque = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            // Remove indices out of current window bounds
+            if (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
+                deque.pollFirst();
+            }
+            // Remove smaller elements from back as they are useless
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
+                deque.pollLast();
+            }
+            deque.offerLast(i);
+            if (i >= k - 1) {
+                result[ri++] = nums[deque.peekFirst()];
+            }
+        }
+        return result;
+    }
+}`,
+                                explanation: "Deque stores indices of elements in decreasing order of values. Front of deque always holds the max element for the current window.",
+                                dryRun: "nums=[1,3,-1,-3,5,3,6,7], k=3. Deque maintains max index. Front has index of 3.",
+                                complexity: "Time: O(N), Space: O(K)",
+                                edgeCases: "k = 1, k = array length, descending arrays.",
+                                alternatives: "Tree map or priority queue (O(N log N))."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // State Management
+        let completedItems = JSON.parse(localStorage.getItem('leetcode_completed_items') || '[]');
+        let currentFilter = 'ALL';
+        let currentActiveId = 'two-sum-pattern';
+
+        // Initialize App
+        function initHandbook() {
+            renderSidebar();
+            loadPattern(currentActiveId);
+            updateProgress();
+            setupSearch();
+            setupTheme();
+        }
+
+        function renderSidebar() {
+            const navContainer = document.getElementById('navLinks');
+            navContainer.innerHTML = '';
+
+            let totalProblems = 0;
+            let completedCount = 0;
+
+            handbookData.forEach(cat => {
+                const catHeader = document.createElement('div');
+                catHeader.className = 'px-3 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider mt-4 flex items-center gap-2';
+                catHeader.innerHTML = `<i class="fa-solid ${cat.icon}"></i> ${cat.category}`;
+                navContainer.appendChild(catHeader);
+
+                cat.patterns.forEach(pat => {
+                    // Filter check
+                    const filteredProblems = pat.problems.filter(p => currentFilter === 'ALL' || p.difficulty === currentFilter);
+                    if (filteredProblems.length === 0 && currentFilter !== 'ALL') return;
+
+                    pat.problems.forEach(p => totalProblems++);
+                    pat.problems.forEach(p => {
+                        if (completedItems.includes(p.id)) completedCount++;
+                    });
+
+                    const btn = document.createElement('button');
+                    btn.className = `w-full text-left px-3 py-2.5 rounded-xl transition flex items-center justify-between group ${currentActiveId === pat.id ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`;
+                    
+                    btn.innerHTML = `
+                        <div class="flex items-center gap-2.5 truncate">
+                            <span class="truncate text-xs">${pat.title}</span>
+                        </div>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">${pat.problems.length} probs</span>
+                    `;
+
+                    btn.onclick = () => {
+                        loadPattern(pat.id);
+                        if (window.innerWidth < 1024) {
+                            document.getElementById('sidebar').classList.add('-translate-x-full');
+                        }
+                    };
+
+                    navContainer.appendChild(btn);
+                });
+            });
+        }
+
+        function loadPattern(id) {
+            currentActiveId = id;
+            let targetPat = null;
+            handbookData.forEach(cat => {
+                cat.patterns.forEach(pat => {
+                    if (pat.id === id) targetPat = pat;
+                });
+            });
+
+            if (!targetPat) return;
+
+            const contentArea = document.getElementById('contentArea');
+            document.getElementById('mobileTitle').innerText = targetPat.title;
+
+            contentArea.innerHTML = `
+                <div class="max-w-4xl mx-auto space-y-8 pb-16">
+                    <!-- Pattern Header -->
+                    <div class="border-b border-slate-200 dark:border-slate-800 pb-6">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 mb-2 inline-block">LeetCode Pattern Masterclass</span>
+                        <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight mt-1">${targetPat.title}</h1>
+                    </div>
+
+                    <!-- A. Pattern Introduction -->
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-book-open"></i> A. Pattern Introduction & Core Intuition</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">${targetPat.introduction}</p>
+                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl text-sm space-y-2">
+                            <div><strong>Sample Input:</strong> <code class="text-xs bg-slate-900 text-slate-100 px-2 py-0.5 rounded">${targetPat.examplesInput}</code></div>
+                            <div><strong>Sample Output:</strong> <code class="text-xs bg-slate-900 text-slate-100 px-2 py-0.5 rounded">${targetPat.examplesOutput}</code></div>
+                        </div>
+                    </div>
+
+                    <!-- B. Pattern Recognition -->
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-lightbulb"></i> B. Pattern Recognition & Clues</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">${targetPat.recognition}</p>
+                    </div>
+
+                    <!-- D. Curated LeetCode Problems -->
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-bold tracking-tight">Curated LeetCode Problems</h3>
+                        ${targetPat.problems.map((p, idx) => {
+                            const isCompleted = completedItems.includes(p.id);
+                            const diffColor = p.difficulty === 'Easy' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400' : p.difficulty === 'Medium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400';
+                            
+                            return `
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                        <div class="flex items-center gap-3">
+                                            <input type="checkbox" ${isCompleted ? 'checked' : ''} onclick="toggleProblemComplete('${p.id}')" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer" title="Mark completed">
+                                            <span class="text-xs font-bold text-slate-400">#${p.number}</span>
+                                            <a href="${p.link}" target="_blank" class="font-bold text-lg hover:text-indigo-600 transition flex items-center gap-1.5">${p.title} <i class="fa-solid fa-external-link text-xs"></i></a>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="px-2.5 py-0.5 rounded text-xs font-semibold ${diffColor}">${p.difficulty}</span>
+                                            <span class="px-2.5 py-0.5 rounded text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">${p.variation}</span>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">${p.statement}</p>
+
+                                    <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl text-xs space-y-1 font-mono">
+                                        <div><strong>Input/Output:</strong> ${p.inputOutput}</div>
+                                        <div><strong>Constraints:</strong> ${p.constraints}</div>
+                                        <div><strong>What it teaches:</strong> <span class="font-sans">${p.teaches}</span></div>
+                                    </div>
+
+                                    <!-- Show Answer Button -->
+                                    <button onclick="toggleAnswer('${p.id}')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition flex items-center gap-2">
+                                        <i class="fa-solid fa-eye"></i> Show Answer & 9-Part Explanation
+                                    </button>
+
+                                    <!-- 9-Part Detailed Answer (Hidden by Default) -->
+                                    <div id="${p.id}" class="hidden mt-4 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-6 text-sm">
+                                        
+                                        <!-- 1. Problem Understanding -->
+                                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                            <h4 class="font-bold text-indigo-600 dark:text-indigo-400 mb-1">1. Problem Understanding</h4>
+                                            <p class="text-slate-600 dark:text-slate-300 text-xs">${p.understanding}</p>
+                                        </div>
+
+                                        <!-- 2. Brute-Force Solution -->
+                                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                            <h4 class="font-bold text-indigo-600 dark:text-indigo-400 mb-1">2. Brute-Force Solution & Limitations</h4>
+                                            <p class="text-slate-600 dark:text-slate-300 text-xs">${p.bruteForce}</p>
+                                        </div>
+
+                                        <!-- 3. Optimized Approach -->
+                                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                            <h4 class="font-bold text-indigo-600 dark:text-indigo-400 mb-1">3. Optimized Approach & Pattern Derivation</h4>
+                                            <p class="text-slate-600 dark:text-slate-300 text-xs">${p.optimized}</p>
+                                        </div>
+
+                                        <!-- 4. Complete Java Implementation -->
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <h4 class="font-bold text-indigo-600 dark:text-indigo-400">4. Complete Java Implementation</h4>
+                                                <button onclick="copyCodeText(this)" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition flex items-center gap-1">
+                                                    <i class="fa-solid fa-copy"></i> Copy Java Code
+                                                </button>
+                                            </div>
+                                            <pre class="bg-slate-950 text-slate-100 p-4 rounded-xl text-xs font-mono overflow-x-auto custom-scrollbar"><code>${escapeHtml(p.code)}</code></pre>
+                                        </div>
+
+                                        <!-- 5. Detailed Code Explanation -->
+                                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                            <h4 class="font-bold text-indigo-600 dark:text-indigo-400 mb-1">5. Detailed Code Explanation</h4>
+                                            <p class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">${p.explanation}</p>
+                                        </div>
+
+                                        <!-- 6. Dry Run -->
+                                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                            <h4 class="font-bold text-indigo-600 dark:text-indigo-400 mb-1">6. Dry Run Walkthrough</h4>
+                                            <p class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">${p.dryRun}</p>
+                                        </div>
+
+                                        <!-- 7. Complexity Analysis -->
+                                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                            <h4 class="font-bold text-indigo-600 dark:text-indigo-400 mb-1">7. Complexity Analysis</h4>
+                                            <p class="text-slate-600 dark:text-slate-300 text-xs">${p.complexity}</p>
+                                        </div>
+
+                                        <!-- 8. Edge Cases -->
+                                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                            <h4 class="font-bold text-indigo-600 dark:text-indigo-400 mb-1">8. Edge Cases Handled</h4>
+                                            <p class="text-slate-600 dark:text-slate-300 text-xs">${p.edgeCases}</p>
+                                        </div>
+
+                                        <!-- 9. Alternatives & Common Mistakes -->
+                                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                            <h4 class="font-bold text-indigo-600 dark:text-indigo-400 mb-1">9. Alternative Approaches & Common Mistakes</h4>
+                                            <p class="text-slate-600 dark:text-slate-300 text-xs">${p.alternatives}</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+
+            contentArea.scrollTop = 0;
+            renderSidebar();
+        }
+
+        function toggleProblemComplete(id) {
+            if (completedItems.includes(id)) {
+                completedItems = completedItems.filter(i => i !== id);
+                showToast('Problem marked incomplete');
+            } else {
+                completedItems.push(id);
+                showToast('Problem marked completed! Great job 🚀');
+            }
+            localStorage.setItem('leetcode_completed_items', JSON.stringify(completedItems));
+            updateProgress();
+            renderSidebar();
+        }
+
+        function updateProgress() {
+            let totalProblems = 0;
+            handbookData.forEach(cat => cat.patterns.forEach(pat => totalProblems += pat.problems.length));
+            const percentage = Math.round((completedItems.length / totalProblems) * 100);
+            
+            document.getElementById('progressText').innerText = `${completedItems.length} / ${totalProblems} completed`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        function toggleAnswer(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        function filterDifficulty(diff) {
+            currentFilter = diff;
+            renderSidebar();
+            showToast(`Filtered by difficulty: ${diff}`);
+        }
+
+        function copyCodeText(btn) {
+            const pre = btn.parentElement.nextElementSibling;
+            const range = document.createRange();
+            range.selectNode(pre);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            try {
+                document.execCommand('copy');
+                showToast('Java code copied to clipboard!');
+            } catch (err) {
+                showToast('Failed to copy code.');
+            }
+            window.getSelection().removeAllRanges();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.oninput = (e) => {
+                const query = e.target.value.toLowerCase();
+                if (!query) {
+                    renderSidebar();
+                    return;
+                }
+                const navContainer = document.getElementById('navLinks');
+                navContainer.innerHTML = '';
+                
+                handbookData.forEach(cat => {
+                    const matchedPatterns = cat.patterns.filter(pat => 
+                        pat.title.toLowerCase().includes(query) || 
+                        pat.problems.some(p => p.title.toLowerCase().includes(query) || p.number.includes(query))
+                    );
+                    if (matchedPatterns.length > 0) {
+                        const catHeader = document.createElement('div');
+                        catHeader.className = 'px-3 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider mt-4';
+                        catHeader.innerText = cat.category;
+                        navContainer.appendChild(catHeader);
+
+                        matchedPatterns.forEach(pat => {
+                            const btn = document.createElement('button');
+                            btn.className = 'w-full text-left px-3 py-2.5 rounded-xl transition text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold';
+                            btn.innerText = pat.title;
+                            btn.onclick = () => loadPattern(pat.id);
+                            navContainer.appendChild(btn);
+                        });
+                    }
+                });
+            };
+        }
+
+        function setupTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark');
+            }
+
+            themeToggle.onclick = () => {
+                if (html.classList.contains('dark')) {
+                    html.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    html.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            };
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        document.getElementById('sidebarToggle').onclick = () => {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        };
+
+        window.onload = initHandbook;
+    </script>
+<script src="header.js"></script>
+</body>
+</html>
