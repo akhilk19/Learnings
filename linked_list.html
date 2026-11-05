@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked List Interview Masterclass - Complete Guide & Solutions</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #34d399;
+            --accent-orange: #fbbf24;
+            --accent-purple: #c084fc;
+            --border-color: #334155;
+            --code-bg: #090d16;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .intro-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro-section h2 {
+            color: var(--accent-blue);
+            margin-top: 0;
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .intro-section h3 {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-top: 1.5rem;
+        }
+
+        .intro-section ul {
+            color: var(--text-muted);
+            padding-left: 1.25rem;
+        }
+
+        .intro-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .difficulty-section {
+            margin-bottom: 3rem;
+        }
+
+        h2.difficulty-title {
+            font-size: 1.75rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .easy { color: var(--accent-green); border-color: var(--accent-green); }
+        .medium { color: var(--accent-orange); border-color: var(--accent-orange); }
+        .hard { color: var(--accent-purple); border-color: var(--accent-purple); }
+
+        .problem-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .problem-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-easy { background: rgba(52, 211, 153, 0.15); color: var(--accent-green); }
+        .badge-medium { background: rgba(251, 191, 36, 0.15); color: var(--accent-orange); }
+        .badge-hard { background: rgba(192, 132, 252, 0.15); color: var(--accent-purple); }
+
+        .io-box {
+            background: rgba(15, 23, 42, 0.6);
+            border-left: 4px solid var(--accent-blue);
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.95rem;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .approach-text {
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+
+        .solution-btn {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .solution-btn:hover {
+            background-color: #0369a1;
+        }
+
+        .solution-content {
+            display: none;
+            margin-top: 1rem;
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        pre {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Linked List Interview Masterclass</h1>
+        <p>Comprehensive guide covering fundamentals, patterns, and every essential LeetCode problem from Easy to Hard.</p>
+    </header>
+
+    <!-- INTRO SECTIONS 1 TO 3 -->
+    <div class="intro-section">
+        <h2>1. The Core Java Node Structure</h2>
+        <p>Every linked list problem starts with the basic node definition. Unlike arrays, elements are scattered in memory and connected solely by references (<code>next</code>):</p>
+<pre>public class ListNode {
+    int val;
+    ListNode next;
+    ListNode() {}
+    ListNode(int val) { this.val = val; }
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+}</pre>
+
+        <h3>2. High-Frequency Interview Patterns</h3>
+        <ul>
+            <li><strong>Fast & Slow Pointers (Tortoise and Hare):</strong> Used for finding cycles, middle elements, or cycle entry points.</li>
+            <li><strong>Dummy / Sentinel Node:</strong> Simplifies edge cases where the head of the list might change or get deleted.</li>
+            <li><strong>In-Place Reversal:</strong> Reversing full lists or sub-lists using a 3-pointer approach (<code>prev</code>, <code>curr</code>, <code>next</code>).</li>
+            <li><strong>Merge & Two-Pointer Traversal:</strong> Combining sorted lists or aligning lengths to find intersections.</li>
+        </ul>
+
+        <h3>3. Categorized LeetCode Questions Overview</h3>
+        <p>Below is the complete catalog of interview problems covered in this masterclass, categorized by difficulty.</p>
+    </div>
+
+    <!-- EASY SECTION -->
+    <section class="difficulty-section">
+        <h2 class="difficulty-title easy">Easy Level Fundamentals</h2>
+
+        <!-- 1. Reverse Linked List -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">1. Reverse Linked List (LeetCode 206)</h3>
+                <span class="badge badge-easy">Easy</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> 1 -> 2 -> 3 -> 4 -> 5 -> NULL</div>
+                <div><strong>Output:</strong> 5 -> 4 -> 3 -> 2 -> 1 -> NULL</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Maintain three pointers: <code>prev</code> (null), <code>curr</code> (head), and <code>nextTemp</code>. Iterate through the list, store the next node temporarily, reverse <code>curr.next</code> to point to <code>prev</code>, and shift forward.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-1')">See Solution</button>
+            <div id="sol-1" class="solution-content">
+<pre>public ListNode reverseList(ListNode head) {
+    ListNode prev = null;
+    ListNode curr = head;
+    while (curr != null) {
+        ListNode nextTemp = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = nextTemp;
+    }
+    return prev;
+}</pre>
+            </div>
+        </div>
+
+        <!-- 2. Linked List Cycle -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">2. Linked List Cycle (LeetCode 141)</h3>
+                <span class="badge badge-easy">Easy</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> head = [3,2,0,-4], pos = 1</div>
+                <div><strong>Output:</strong> true</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Use Floyd's Tortoise and Hare algorithm. Initialize `slow` and `fast` at the head. Move `slow` by 1 step and `fast` by 2 steps. If they meet, a cycle exists.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-2')">See Solution</button>
+            <div id="sol-2" class="solution-content">
+<pre>public boolean hasCycle(ListNode head) {
+    if (head == null || head.next == null) return false;
+    ListNode slow = head, fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+        if (slow == fast) return true;
+    }
+    return false;
+}</pre>
+            </div>
+        </div>
+
+        <!-- 3. Merge Two Sorted Lists -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">3. Merge Two Sorted Lists (LeetCode 21)</h3>
+                <span class="badge badge-easy">Easy</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> l1 = [1,2,4], l2 = [1,3,4]</div>
+                <div><strong>Output:</strong> [1,1,2,3,4,4]</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Use a dummy head node. Compare nodes from both lists and attach the smaller one to the result list iteratively until one list runs out, then attach the remaining nodes.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-3')">See Solution</button>
+            <div id="sol-3" class="solution-content">
+<pre>public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+    ListNode dummy = new ListNode(0);
+    ListNode curr = dummy;
+    while (list1 != null && list2 != null) {
+        if (list1.val <= list2.val) {
+            curr.next = list1;
+            list1 = list1.next;
+        } else {
+            curr.next = list2;
+            list2 = list2.next;
+        }
+        curr = curr.next;
+    }
+    curr.next = (list1 != null) ? list1 : list2;
+    return dummy.next;
+}</pre>
+            </div>
+        </div>
+
+        <!-- 4. Palindrome Linked List -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">4. Palindrome Linked List (LeetCode 234)</h3>
+                <span class="badge badge-easy">Easy</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> [1,2,2,1]</div>
+                <div><strong>Output:</strong> true</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Find the middle of the linked list using fast/slow pointers, reverse the second half of the list, and compare values from the start and middle head.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-4')">See Solution</button>
+            <div id="sol-4" class="solution-content">
+<pre>public boolean isPalindrome(ListNode head) {
+    if (head == null || head.next == null) return true;
+    ListNode slow = head, fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    ListNode secondHalf = reverse(slow);
+    ListNode firstHalf = head;
+    while (secondHalf != null) {
+        if (firstHalf.val != secondHalf.val) return false;
+        firstHalf = firstHalf.next;
+        secondHalf = secondHalf.next;
+    }
+    return true;
+}
+private ListNode reverse(ListNode head) {
+    ListNode prev = null, curr = head;
+    while (curr != null) {
+        ListNode next = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}</pre>
+            </div>
+        </div>
+
+        <!-- 5. Remove Duplicates from Sorted List -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">5. Remove Duplicates from Sorted List (LeetCode 83)</h3>
+                <span class="badge badge-easy">Easy</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> [1,1,2,3,3]</div>
+                <div><strong>Output:</strong> [1,2,3]</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Traverse the sorted list. If `curr.val == curr.next.val`, bypass the duplicate node by pointing `curr.next` to `curr.next.next`. Otherwise, move `curr` forward.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-5')">See Solution</button>
+            <div id="sol-5" class="solution-content">
+<pre>public ListNode deleteDuplicates(ListNode head) {
+    ListNode curr = head;
+    while (curr != null && curr.next != null) {
+        if (curr.val == curr.next.val) {
+            curr.next = curr.next.next;
+        } else {
+            curr = curr.next;
+        }
+    }
+    return head;
+}</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- MEDIUM SECTION -->
+    <section class="difficulty-section">
+        <h2 class="difficulty-title medium">Medium Level Staples</h2>
+
+        <!-- 6. Add Two Numbers -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">6. Add Two Numbers (LeetCode 2)</h3>
+                <span class="badge badge-medium">Medium</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> l1 = [2,4,3], l2 = [5,6,4]</div>
+                <div><strong>Output:</strong> [7,0,8]</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Traverse both lists simultaneously. Sum corresponding digits with any carry, store `sum % 10` in a new node, and carry forward `sum / 10`.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-6')">See Solution</button>
+            <div id="sol-6" class="solution-content">
+<pre>public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    ListNode dummyHead = new ListNode(0);
+    ListNode current = dummyHead;
+    int carry = 0;
+    while (l1 != null || l2 != null || carry != 0) {
+        int sum = carry;
+        if (l1 != null) { sum += l1.val; l1 = l1.next; }
+        if (l2 != null) { sum += l2.val; l2 = l2.next; }
+        carry = sum / 10;
+        current.next = new ListNode(sum % 10);
+        current = current.next;
+    }
+    return dummyHead.next;
+}</pre>
+            </div>
+        </div>
+
+        <!-- 7. Remove Nth Node From End of List -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">7. Remove Nth Node From End of List (LeetCode 19)</h3>
+                <span class="badge badge-medium">Medium</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> head = [1,2,3,4,5], n = 2</div>
+                <div><strong>Output:</strong> [1,2,3,5]</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Advance a `fast` pointer by `n+1` steps. Move both `fast` and `slow` together until `fast` hits null, then update `slow.next = slow.next.next`.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-7')">See Solution</button>
+            <div id="sol-7" class="solution-content">
+<pre>public ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode dummy = new ListNode(0, head);
+    ListNode fast = dummy, slow = dummy;
+    for (int i = 0; i <= n; i++) fast = fast.next;
+    while (fast != null) {
+        fast = fast.next;
+        slow = slow.next;
+    }
+    slow.next = slow.next.next;
+    return dummy.next;
+}</pre>
+            </div>
+        </div>
+
+        <!-- 8. Linked List Cycle II -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">8. Linked List Cycle II (LeetCode 142)</h3>
+                <span class="badge badge-medium">Medium</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> head = [3,2,0,-4], pos = 1</div>
+                <div><strong>Output:</strong> tail connects to node index 1</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Use fast and slow pointers to detect a cycle. Once they meet, reset one pointer to the head and advance both one step at a time until they meet at the cycle start node.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-8')">See Solution</button>
+            <div id="sol-8" class="solution-content">
+<pre>public ListNode detectCycle(ListNode head) {
+    ListNode slow = head, fast = head;
+    boolean hasCycle = false;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+        if (slow == fast) { hasCycle = true; break; }
+    }
+    if (!hasCycle) return null;
+    slow = head;
+    while (slow != fast) {
+        slow = slow.next;
+        fast = fast.next;
+    }
+    return slow;
+}</pre>
+            </div>
+        </div>
+
+        <!-- 9. Reorder List -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">9. Reorder List (LeetCode 143)</h3>
+                <span class="badge badge-medium">Medium</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> [1,2,3,4]</div>
+                <div><strong>Output:</strong> [1,4,2,3]</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Split the list in half, reverse the second half, and merge the two halves alternately.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-9')">See Solution</button>
+            <div id="sol-9" class="solution-content">
+<pre>public void reorderList(ListNode head) {
+    if (head == null || head.next == null) return;
+    ListNode slow = head, fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    ListNode prev = null, curr = slow.next;
+    slow.next = null;
+    while (curr != null) {
+        ListNode nextTemp = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = nextTemp;
+    }
+    ListNode h1 = head, h2 = prev;
+    while (h2 != null) {
+        ListNode t1 = h1.next, t2 = h2.next;
+        h1.next = h2;
+        h2.next = t1;
+        h1 = t1;
+        h2 = t2;
+    }
+}</pre>
+            </div>
+        </div>
+
+        <!-- 10. Intersection of Two Linked Lists -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">10. Intersection of Two Linked Lists (LeetCode 160)</h3>
+                <span class="badge badge-medium">Medium</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5]</div>
+                <div><strong>Output:</strong> Reference of the node with value 8</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Use two pointers traversing both lists. When pointer A reaches the end, redirect it to head B; when pointer B reaches the end, redirect it to head A. They will meet at the intersection.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-10')">See Solution</button>
+            <div id="sol-10" class="solution-content">
+<pre>public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    if (headA == null || headB == null) return null;
+    ListNode a = headA, b = headB;
+    while (a != b) {
+        a = (a == null) ? headB : a.next;
+        b = (b == null) ? headA : b.next;
+    }
+    return a;
+}</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- HARD SECTION -->
+    <section class="difficulty-section">
+        <h2 class="difficulty-title hard">Hard Level Challenges</h2>
+
+        <!-- 11. Reverse Nodes in k-Group -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">11. Reverse Nodes in k-Group (LeetCode 25)</h3>
+                <span class="badge badge-hard">Hard</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> head = [1,2,3,4,5], k = 2</div>
+                <div><strong>Output:</strong> [2,1,4,3,5]</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Check if there are at least `k` nodes remaining. If so, reverse the k-group iteratively and recursively link it to the result of the remaining sub-list.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-11')">See Solution</button>
+            <div id="sol-11" class="solution-content">
+<pre>public ListNode reverseKGroup(ListNode head, int k) {
+    ListNode curr = head;
+    int count = 0;
+    while (curr != null && count < k) {
+        curr = curr.next;
+        count++;
+    }
+    if (count == k) {
+        curr = reverseKGroup(curr, k);
+        while (count-- > 0) {
+            ListNode tmp = head.next;
+            head.next = curr;
+            curr = head;
+            head = tmp;
+        }
+        head = curr;
+    }
+    return head;
+}</pre>
+            </div>
+        </div>
+
+        <!-- 12. Merge k Sorted Lists -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">12. Merge k Sorted Lists (LeetCode 23)</h3>
+                <span class="badge badge-hard">Hard</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> lists = [[1,4,5],[1,3,4],[2,6]]</div>
+                <div><strong>Output:</strong> [1,1,2,3,4,4,5,6]</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Use a Min-Heap (`PriorityQueue`) to track the minimum current node across all `k` lists in $O(\log k)$ time per insertion/poll.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-12')">See Solution</button>
+            <div id="sol-12" class="solution-content">
+<pre>public ListNode mergeKLists(ListNode[] lists) {
+    if (lists == null || lists.length == 0) return null;
+    PriorityQueue&lt;ListNode&gt; minHeap = new PriorityQueue&lt;&gt;((a, b) -&gt; a.val - b.val);
+    for (ListNode list : lists) {
+        if (list != null) minHeap.offer(list);
+    }
+    ListNode dummy = new ListNode(0), curr = dummy;
+    while (!minHeap.isEmpty()) {
+        ListNode smallest = minHeap.poll();
+        curr.next = smallest;
+        curr = curr.next;
+        if (smallest.next != null) minHeap.offer(smallest.next);
+    }
+    return dummy.next;
+}</pre>
+            </div>
+        </div>
+
+        <!-- 13. Copy List with Random Pointer -->
+        <div class="problem-card">
+            <div class="problem-header">
+                <h3 class="problem-title">13. Copy List with Random Pointer (LeetCode 138)</h3>
+                <span class="badge badge-hard">Hard</span>
+            </div>
+            <div class="io-box">
+                <div><strong>Input:</strong> head = [[7,null],[13,0],[11,4],[10,2],[1,0]]</div>
+                <div><strong>Output:</strong> Deep copied linked list</div>
+            </div>
+            <p class="approach-text"><strong>Detailed Approach:</strong> Interleave cloned nodes right next to original nodes (`A -> A' -> B -> B'`), assign random pointers for clones, and then separate the two lists.</p>
+            <button class="solution-btn" onclick="toggleSolution('sol-13')">See Solution</button>
+            <div id="sol-13" class="solution-content">
+<pre>public Node copyRandomList(Node head) {
+    if (head == null) return null;
+    Node curr = head;
+    while (curr != null) {
+        Node clone = new Node(curr.val);
+        clone.next = curr.next;
+        curr.next = clone;
+        curr = clone.next;
+    }
+    curr = head;
+    while (curr != null) {
+        if (curr.random != null) {
+            curr.next.random = curr.random.next;
+        }
+        curr = curr.next.next;
+    }
+    curr = head;
+    Node dummy = new Node(0), copyCurr = dummy;
+    while (curr != null) {
+        copyCurr.next = curr.next;
+        copyCurr = copyCurr.next;
+        curr.next = curr.next.next;
+        curr = curr.next;
+    }
+    return dummy.next;
+}</pre>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function toggleSolution(id) {
+        const element = document.getElementById(id);
+        element.style.display = (element.style.display === "block") ? "none" : "block";
+    }
+</script>
+
+</body>
+</html>

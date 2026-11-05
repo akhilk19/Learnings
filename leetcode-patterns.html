@@ -27,10 +27,41 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            z-index: 30;
+        }
+
+        .sidebar-backdrop.visible {
+            display: block;
+        }
+
         @media print {
             body { background: white !important; color: black !important; }
             aside, header, .no-print { display: none !important; }
             main { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+        }
+
+        @media (max-width: 1023px) {
+            #sidebar {
+                position: fixed;
+                top: 64px;
+                left: 0;
+                bottom: 0;
+                width: min(82vw, 320px);
+                transform: translateX(-110%);
+                transition: transform 0.25s ease;
+                box-shadow: 0 20px 45px rgba(15, 23, 42, 0.25);
+                z-index: 40;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
@@ -38,6 +69,7 @@
     <div id="shared-header"></div>
 
     <div class="flex h-screen overflow-hidden">
+        <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
         <!-- Sidebar Navigation -->
         <aside id="sidebar" class="w-80 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 z-30">
             <!-- Sidebar Header -->
@@ -975,6 +1007,7 @@
             updateProgress();
             setupSearch();
             setupTheme();
+            setupSidebarBehavior();
         }
 
         function renderSidebar() {
@@ -1286,8 +1319,54 @@
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
+        function setSidebarOpen(isOpen) {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (!sidebar) return;
+            sidebar.classList.toggle('open', isOpen);
+            if (backdrop) {
+                backdrop.classList.toggle('visible', isOpen && window.innerWidth < 1024);
+            }
+        }
+
+        function setupSidebarBehavior() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+
+            if (sidebarToggle) {
+                sidebarToggle.onclick = () => {
+                    if (window.innerWidth < 1024) {
+                        const shouldOpen = !sidebar.classList.contains('open');
+                        setSidebarOpen(shouldOpen);
+                    }
+                };
+            }
+
+            if (backdrop) {
+                backdrop.onclick = () => setSidebarOpen(false);
+            }
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 1024) {
+                    setSidebarOpen(true);
+                } else {
+                    setSidebarOpen(false);
+                }
+            });
+        }
+
+        function initHandbook() {
+            renderSidebar();
+            loadPattern(currentActiveId);
+            updateProgress();
+            setupSearch();
+            setupTheme();
+            setupSidebarBehavior();
+        }
+
         document.getElementById('sidebarToggle').onclick = () => {
-            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            setSidebarOpen(!document.getElementById('sidebar').classList.contains('open'));
         };
 
         window.onload = initHandbook;

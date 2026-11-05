@@ -3,7 +3,8 @@
     { href: './index.html', label: 'Home' },
     { href: './sql-handbook.html', label: 'SQL & DBMS' },
     { href: './java-design-patterns.html', label: 'Java Design Patterns' },
-    { href: './leetcode-patterns.html', label: 'LeetCode Patterns' }
+    { href: './leetcode-patterns.html', label: 'LeetCode Patterns' },
+    { href: './linked_list.html', label: 'Linked Lists' }
   ];
 
   const currentPath = new URL(window.location.href).pathname.replace(/\/+$/, '') || '/';
